@@ -20,11 +20,11 @@ Register #(.N(64)) IF_ID (.D({pcout, data_out}),.L(1'b1),.clk(clk),.rst(rst),.Q(
 ControlUnit control(.opcode(instruction_mem_data_out[`IR_opcode]), .funct3(instruction_mem_data_out[`IR_funct3]), .inst20(instruction_mem_data_out[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
 
 wire [31:0] ID_EX_PC, ID_EX_RegR1, ID_EX_RegR2, ID_EX_Imm;
-wire [14:0] ID_EX_Control;
+wire [13:0] ID_EX_Control;
 wire [4:0] ID_EX_Rs1,ID_EX_Rs2,ID_EX_Rd;
 wire [3:0] ID_EX_Func3, IF_ID_Func3;
 wire [4:0] IF_ID__rd, IF_ID__rs1, IF_ID__rs2;
-wire [14:0] ID_EX_Control_input;
+wire [13:0] ID_EX_Control_input;
 assign IF_ID_Func3 = {IF_ID_Inst[30], IF_ID_Inst[14:12]};
 assign IF_ID__rd = IF_ID_Inst[11:7];
 assign IF_ID__rs1 = IF_ID_Inst[19:15];
@@ -34,7 +34,13 @@ assign ID_EX_Control_input = {branch,jal,jalr,lui,memRead,memWrite, regWrite, AL
 //wb = regwrite, wbsel
 // m = branch, jal, jalr, lui, memwrite, memRead
 // ex = aluasel, alubsel, aluop
-Register #(.N(64)) IF_ID (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata1, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2 }),.L(1'b1),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
+Register #(.N(160)) IF_ID (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
+.Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
+
+wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_BranchAddOut;
+wire [13:0] EX_MEM_Control;
+wire [
+
 
 
 // control wires
