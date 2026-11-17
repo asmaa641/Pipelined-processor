@@ -37,26 +37,27 @@ assign IF_ID__rs2 = IF_ID_Inst[24:20];
   Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
-wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_BranchAddOut;
-  wire [4:0] EX_MEM_Control; // wb and mem only
+wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_PCPlus4;
+wire [4:0] EX_MEM_Control; // wb and mem only
 wire [4:0] EX_MEM_rd; 
-  wire [4:0] EX_MEM_Control_input;
+wire [4:0] EX_MEM_Control_input;
+wire [3:0] EX_MEM_Func3;
 wire EX_MEM_zero;
-  assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memread,memwrite,regwrite,wbsel
+assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memread,memwrite,regwrite,wbsel
 assign targetAddress = ID_EX_PC + ID_EX_Imm;
-  Register #(.N(107)) EX_MEM (.D({EX_MEM_Control_input,targetAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
-  .Q({EX_MEM_Control,EX_MEM_BranchAddOut,EX_MEM_zero,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd}));
+  Register #(.N(110)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,zf,ALUResult,ID_EX_RegR2,ID_EX_Rd, ID_EX_Func3}), .L(1'b1),.clk(clk),.rst(rst),
+                              .Q({EX_MEM_Control,EX_MEM_PCPlus4,EX_MEM_zero,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd, EX_MEM_Func3}));
 
   wire [2:0] MEM_WB_Control;
-wire [31:0] MEM_WB_Mem_Out, MEM_WB_ALUout;
+  wire [31:0] MEM_WB_Mem_Out, MEM_WB_ALUout, MEM_WB_PCPlus4;
 wire [4:0] MEM_WB_rd;
   wire [2:0] MEM_WB_Control_input;
   assign MEM_WB_Control_input = EX_MEM_Control[2:0]; // regwrite,wbsel
-  Register #(.N(72)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_rd}),.L(1'b1),.clk(clk),.rst(rst),
-                              .Q({MEM_WB_Control,MEM_WB_Mem_Out,MEM_WB_ALUout,MEM_WB_rd}));
+  Register #(.N(104)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_PCPlus4,EX_MEM_rd}),.L(1'b1),.clk(clk),.rst(rst),
+                              .Q({MEM_WB_Control,MEM_WB_Mem_Out,MEM_WB_ALUout,MEM_WB_PCPlus4,MEM_WB_rd}));
 wire [31:0] MEM_WB_WriteData;
-assign MEM_WB_WriteData = MEM_WB_Ctrl[2] ? MEM_WB_Mem_out : MEM_WB_ALU_out;
-
+  assign MEM_WB_WriteData = MEM_WB_Control[1] ? MEM_WB_PCPlus4
+    : (MEM_WB_Control[0] ? MEM_WB_Mem_Out : MEM_WB_ALUout);
 wire [1:0] forwardA;
 wire [1:0] forwardB;
 //forwarding_unit fu(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_EX_Rs2), .EXMEMRegisterRd(EX_MEM_Rd), .MEMWBRegisterRd(MEM_WB_Rd), .EXMEMRegWrite(EX_MEM_Ctrl[0] && !EX_MEM_Ctrl[3]), .MEMWBRegWrite(MEM_WB_Ctrl[0]), .forwardA(forwardA), .forwardB(forwardB));
@@ -123,14 +124,14 @@ rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
   TwoBy1Mux ALUinput2mux(.A(ID_EX_RegR2), .B(ID_EX_Imm), .S(ID_EX_Control[5]), .C(ALUinput2));
 
 // ALUControl
-  ALUControl alucontrol(.ALUOp(ID_EX_Contol[2:0]), .funct3(ID_EX_Func3[2:0]),.inst30(ID_EX_Func3[2:0]), .lui(lui), .ALUSel(ALUSel));
+  ALUControl alucontrol(.ALUOp(ID_EX_Control[2:0]), .funct3(ID_EX_Func3[2:0]),.inst30(ID_EX_Func3[3]), .lui(ID_EX_Control[10]), .ALUSel(ALUSel));
 
 // ALU
 prv32_ALU ALU(.a(ALUinput1), .b(ALUinput2), .shamt(ALUinput2[4:0]), .r(ALUResult), .cf(cf), .zf(zf), .vf(vf), .sf(sf), .alufn(ALUSel));
 
 // ALU to DataMem
-  DataMem DataMem(.clk(clk), .MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(instruction_mem_data_out[`IR_funct3]),
-.addr(ALUResult), .data_in(readdata2), .data_out(dataMemOut));
+  DataMem DataMem(.clk(clk), .MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
+.addr(EX_MEM_ALU_Out), .data_in(EX_MEM_StoreData), .data_out(dataMemOut));
 
 
 
@@ -148,8 +149,7 @@ assign pcplus4 = pcout +4;
 
   TwoBy1Mux pc4OrtargetAddressorJal(.A(pc4OrtargetAddressOutput), .B(jalRTarget), .S(PCSel[1]), .C(pcin));
 
-BranchUnit branchU(.branch(branch), .jal(jal), .jalr(jalr), .funct3(instruction_mem_data_out[`IR_funct3]), .cf(cf), .zf(zf), .vf(vf), .sf(sf), .PCSel(PCSel));
-
+  BranchUnit branchU(.branch(ID_EX_Control[13]),.jal(ID_EX_Control[12]), .jalr(ID_EX_Control[11]), .funct3(ID_EX_Func3[2:0]), .cf(cf),.zf(zf),.vf(vf), .sf(sf),.PCSel(PCSel));
 
 
 
