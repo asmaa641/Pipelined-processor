@@ -15,16 +15,16 @@
 module Processor(input clk, 
 input rst); 
 wire [31:0] IF_ID_PC, IF_ID_Inst;
-  Register #(.N(64)) IF_ID (.D({pcout, data_out}),.L(~halt),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
+  Register #(.N(64)) IF_ID (.D({pcout, instruction_mem_data_out}),.L(~halt),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
 // Instruction to Control Unit
 ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_funct3]), .inst20(IF_ID_Inst[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
 
 wire [31:0] ID_EX_PC, ID_EX_RegR1, ID_EX_RegR2, ID_EX_Imm;
-  wire [12:0] ID_EX_Control;
+  wire [13:0] ID_EX_Control;
 wire [4:0] ID_EX_Rs1,ID_EX_Rs2,ID_EX_Rd;
 wire [3:0] ID_EX_Func3, IF_ID_Func3;
 wire [4:0] IF_ID__rd, IF_ID__rs1, IF_ID__rs2;
-  wire [12:0] ID_EX_Control_input;
+  wire [13:0] ID_EX_Control_input;
 assign IF_ID_Func3 = {IF_ID_Inst[30], IF_ID_Inst[14:12]};
 assign IF_ID__rd = IF_ID_Inst[11:7];
 assign IF_ID__rs1 = IF_ID_Inst[19:15];
@@ -34,7 +34,7 @@ assign IF_ID__rs2 = IF_ID_Inst[24:20];
 //wb = regwrite, wbsel
 // m = branch, jal, jalr, lui, memwrite, memRead
 // ex = aluasel, alubsel, aluop
-Register #(.N(160)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
+  Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_BranchAddOut;
@@ -51,9 +51,11 @@ assign targetAddress = ID_EX_PC + ID_EX_Imm;
 wire [31:0] MEM_WB_Mem_Out, MEM_WB_ALUout;
 wire [4:0] MEM_WB_rd;
   wire [2:0] MEM_WB_Control_input;
-assign MEM_WB_Control_input = EX_MEM_Control[3:1];
+  assign MEM_WB_Control_input = EX_MEM_Control[3:1]; // regwrite,wbsel
   Register #(.N(72)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_rd}),.L(1'b1),.clk(clk),.rst(rst),
                               .Q({MEM_WB_Control,MEM_WB_Mem_Out,MEM_WB_ALUout,MEM_WB_rd}));
+wire [31:0] MEM_WB_WriteData;
+assign MEM_WB_WriteData = MEM_WB_Ctrl[2] ? MEM_WB_Mem_out : MEM_WB_ALU_out;
 
 wire [1:0] forwardA;
 wire [1:0] forwardB;
@@ -105,14 +107,11 @@ Register pcdut (.D(pcin), .L(~halt), .clk(clk), .rst(rst), .Q(pcout));
 // when halt is zero -> load = 1, updates pc
 
 // PC to instruction memory
-InstMem im(.addr(pcout), .data_out(instruction_mem_data_out));
+  InstMem im(.addr(pcout), .data_out(instruction_mem_data_out));
 
-
-// Instruction to Control Unit
-ControlUnit control(.opcode(instruction_mem_data_out[`IR_opcode]), .funct3(instruction_mem_data_out[`IR_funct3]), .inst20(instruction_mem_data_out[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
 
 // instruction to register
-RegFile register(.clk(clk), .rst(rst), .readreg1(instruction_mem_data_out[`IR_rs1]), .readreg2(instruction_mem_data_out[`IR_rs2]), .writereg(instruction_mem_data_out[`IR_rd]), .writedata(write_data), .regwrite(RegWrite), .readdata1(readdata1),.readdata2(readdata2));
+RegFile register(.clk(clk), .rst(rst), .readreg1(IF_ID_Inst[`IR_rs1]), .readreg2(IF_ID_Inst[`IR_rs2]), .writereg(MEM_WB_rd), .writedata(MEM_WB_WriteData), .regwrite(MEM_WB_Control[2]), .readdata1(readdata1),.readdata2(readdata2));
 
 // instruction to immediate generator
 rv32_ImmGen immGen(.IR(instruction_mem_data_out), .Imm(generatedImm));
