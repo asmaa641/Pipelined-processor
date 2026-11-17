@@ -17,7 +17,7 @@ input rst);
 wire [31:0] IF_ID_PC, IF_ID_Inst;
 Register #(.N(64)) IF_ID (.D({pcout, data_out}),.L(1'b1),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
 // Instruction to Control Unit
-ControlUnit control(.opcode(instruction_mem_data_out[`IR_opcode]), .funct3(instruction_mem_data_out[`IR_funct3]), .inst20(instruction_mem_data_out[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
+ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_funct3]), .inst20(IF_ID_Inst[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
 
 wire [31:0] ID_EX_PC, ID_EX_RegR1, ID_EX_RegR2, ID_EX_Imm;
 wire [13:0] ID_EX_Control;
@@ -34,13 +34,18 @@ assign ID_EX_Control_input = {branch,jal,jalr,lui,memRead,memWrite, regWrite, AL
 //wb = regwrite, wbsel
 // m = branch, jal, jalr, lui, memwrite, memRead
 // ex = aluasel, alubsel, aluop
-Register #(.N(160)) IF_ID (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
+  Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_BranchAddOut;
-wire [13:0] EX_MEM_Control;
-wire [
-
+  wire [9:0] EX_MEM_Control; // wb and mem only
+  wire [4:0] EX_MEM_rd; 
+  wire [9:0] EX_MEM_Control_input;
+  wire EX_MEM_zero;
+  assign EX_MEM_Control_input = {ID_EX_Control[13:7], ID_EX_Control[4:3],ID_EX_Control[0]};
+  assign targetAddress = ID_EX_PC + generatedImm;
+  Register #(.N(111)) EX_MEM (.D({EX_MEM_Control_input,targerAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
+                           .Q({EX_MEM_Control,EX_MEM_BranchAddOut,EX_MEM_zero,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd}));
 
 
 // control wires
@@ -124,7 +129,7 @@ DataMem DataMem(.clk(clk), .MemRead(memRead), .MemWrite(memWrite), .funct3(instr
 assign pcplus4 = pcout +4;
   TwoBy1Mux PCorDMorALU(.A(dataMemOrALUMUXOutput), .B(pcplus4), .S(WBSel[1]), .C(write_data));
 
-assign targetAddress = pcout + generatedImm;
+
 
   TwoBy1Mux pc4OrtargetAddress(.A(pcplus4), .B(targetAddress), .S(PCSel[0]), .C(pc4OrtargetAddressOutput));
 
