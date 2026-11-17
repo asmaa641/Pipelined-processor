@@ -38,15 +38,22 @@ assign ID_EX_Control_input = {branch,jal,jalr,lui,memRead,memWrite, regWrite, AL
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_BranchAddOut;
-  wire [9:0] EX_MEM_Control; // wb and mem only
-  wire [4:0] EX_MEM_rd; 
-  wire [9:0] EX_MEM_Control_input;
-  wire EX_MEM_zero;
-  assign EX_MEM_Control_input = {ID_EX_Control[13:7], ID_EX_Control[4:3],ID_EX_Control[0]};
-  assign targetAddress = ID_EX_PC + generatedImm;
-  Register #(.N(111)) EX_MEM (.D({EX_MEM_Control_input,targerAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
-                           .Q({EX_MEM_Control,EX_MEM_BranchAddOut,EX_MEM_zero,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd}));
+wire [9:0] EX_MEM_Control; // wb and mem only
+wire [4:0] EX_MEM_rd; 
+wire [9:0] EX_MEM_Control_input;
+wire EX_MEM_zero;
+assign EX_MEM_Control_input = {ID_EX_Control[13:7], ID_EX_Control[4:3],ID_EX_Control[0]};
+assign targetAddress = ID_EX_PC + generatedImm;
+Register #(.N(111)) EX_MEM (.D({EX_MEM_Control_input,targerAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
+  .Q({EX_MEM_Control,EX_MEM_BranchAddOut,EX_MEM_zero,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd}));
 
+wire [9:0] MEM_WB_Control;
+wire [31:0] MEM_WB_Mem_Out, MEM_WB_ALUout;
+wire [4:0] MEM_WB_rd;
+wire [9:0] MEM_WB_Control_input;
+assign MEM_WB_Control_input = EX_MEM_Control[3:1];
+  Register #(.N(111)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_rd}),.L(1'b1),.clk(clk),.rst(rst),
+                              .Q({MEM_WB_Control,MEM_WB_Mem_Out,MEM_WB_ALUout,MEM_WB_rd}));
 
 // control wires
 wire branch;
