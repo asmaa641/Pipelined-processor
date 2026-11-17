@@ -38,20 +38,20 @@ assign IF_ID__rs2 = IF_ID_Inst[24:20];
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_BranchAddOut;
-  wire [8:0] EX_MEM_Control; // wb and mem only
+  wire [4:0] EX_MEM_Control; // wb and mem only
 wire [4:0] EX_MEM_rd; 
-  wire [8:0] EX_MEM_Control_input;
+  wire [4:0] EX_MEM_Control_input;
 wire EX_MEM_zero;
-assign EX_MEM_Control_input = {ID_EX_Control[13:7], ID_EX_Control[4:3]};
+  assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memread,memwrite,regwrite,wbsel
 assign targetAddress = ID_EX_PC + ID_EX_Imm;
-  Register #(.N(111)) EX_MEM (.D({EX_MEM_Control_input,targetAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
+  Register #(.N(107)) EX_MEM (.D({EX_MEM_Control_input,targetAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
   .Q({EX_MEM_Control,EX_MEM_BranchAddOut,EX_MEM_zero,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd}));
 
   wire [2:0] MEM_WB_Control;
 wire [31:0] MEM_WB_Mem_Out, MEM_WB_ALUout;
 wire [4:0] MEM_WB_rd;
   wire [2:0] MEM_WB_Control_input;
-  assign MEM_WB_Control_input = EX_MEM_Control[3:1]; // regwrite,wbsel
+  assign MEM_WB_Control_input = EX_MEM_Control[2:0]; // regwrite,wbsel
   Register #(.N(72)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_rd}),.L(1'b1),.clk(clk),.rst(rst),
                               .Q({MEM_WB_Control,MEM_WB_Mem_Out,MEM_WB_ALUout,MEM_WB_rd}));
 wire [31:0] MEM_WB_WriteData;
@@ -114,22 +114,22 @@ Register pcdut (.D(pcin), .L(~halt), .clk(clk), .rst(rst), .Q(pcout));
 RegFile register(.clk(clk), .rst(rst), .readreg1(IF_ID_Inst[`IR_rs1]), .readreg2(IF_ID_Inst[`IR_rs2]), .writereg(MEM_WB_rd), .writedata(MEM_WB_WriteData), .regwrite(MEM_WB_Control[2]), .readdata1(readdata1),.readdata2(readdata2));
 
 // instruction to immediate generator
-rv32_ImmGen immGen(.IR(instruction_mem_data_out), .Imm(generatedImm));
+rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
 
 
 // ALUinput1
-  TwoBy1Mux ALUinput1mux(.A(readdata1), .B(pcout), .S(ALUASel), .C(ALUinput1));
+  TwoBy1Mux ALUinput1mux(.A(ID_EX_RegR1), .B(ID_EX_PC), .S(ID_EX_Control[6]), .C(ALUinput1));
 // ALUinput2
-  TwoBy1Mux ALUinput2mux(.A(readdata2), .B(generatedImm), .S(ALUBSel), .C(ALUinput2));
+  TwoBy1Mux ALUinput2mux(.A(ID_EX_RegR2), .B(ID_EX_Imm), .S(ID_EX_Control[5]), .C(ALUinput2));
 
 // ALUControl
-ALUControl alucontrol(.ALUOp(ALUOp), .funct3(instruction_mem_data_out[`IR_funct3]),.inst30(instruction_mem_data_out[30]), .lui(lui), .ALUSel(ALUSel));
+  ALUControl alucontrol(.ALUOp(ID_EX_Contol[2:0]), .funct3(ID_EX_Func3[2:0]),.inst30(ID_EX_Func3[2:0]), .lui(lui), .ALUSel(ALUSel));
 
 // ALU
 prv32_ALU ALU(.a(ALUinput1), .b(ALUinput2), .shamt(ALUinput2[4:0]), .r(ALUResult), .cf(cf), .zf(zf), .vf(vf), .sf(sf), .alufn(ALUSel));
 
 // ALU to DataMem
-DataMem DataMem(.clk(clk), .MemRead(memRead), .MemWrite(memWrite), .funct3(instruction_mem_data_out[`IR_funct3]),
+  DataMem DataMem(.clk(clk), .MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(instruction_mem_data_out[`IR_funct3]),
 .addr(ALUResult), .data_in(readdata2), .data_out(dataMemOut));
 
 
