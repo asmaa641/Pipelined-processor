@@ -15,45 +15,50 @@
 module Processor(input clk, 
 input rst); 
 wire [31:0] IF_ID_PC, IF_ID_Inst;
-Register #(.N(64)) IF_ID (.D({pcout, data_out}),.L(1'b1),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
+  Register #(.N(64)) IF_ID (.D({pcout, data_out}),.L(~halt),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
 // Instruction to Control Unit
 ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_funct3]), .inst20(IF_ID_Inst[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
 
 wire [31:0] ID_EX_PC, ID_EX_RegR1, ID_EX_RegR2, ID_EX_Imm;
-wire [13:0] ID_EX_Control;
+  wire [12:0] ID_EX_Control;
 wire [4:0] ID_EX_Rs1,ID_EX_Rs2,ID_EX_Rd;
 wire [3:0] ID_EX_Func3, IF_ID_Func3;
 wire [4:0] IF_ID__rd, IF_ID__rs1, IF_ID__rs2;
-wire [13:0] ID_EX_Control_input;
+  wire [12:0] ID_EX_Control_input;
 assign IF_ID_Func3 = {IF_ID_Inst[30], IF_ID_Inst[14:12]};
 assign IF_ID__rd = IF_ID_Inst[11:7];
 assign IF_ID__rs1 = IF_ID_Inst[19:15];
 assign IF_ID__rs2 = IF_ID_Inst[24:20];
-assign ID_EX_Control_input = {branch,jal,jalr,lui,memRead,memWrite, regWrite, ALUASeL, ALUBSel, WBSel, ALUOp,halt};
+  assign ID_EX_Control_input = {branch,jal,jalr,lui,memRead,memWrite, regWrite, ALUASel, ALUBSel, WBSel, ALUOp};;
 
 //wb = regwrite, wbsel
 // m = branch, jal, jalr, lui, memwrite, memRead
 // ex = aluasel, alubsel, aluop
-  Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
+Register #(.N(160)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(1'b1),.clk(clk),.rst(rst),
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 wire [31:0] EX_MEM_ALU_Out, EX_MEM_RegR2, EX_MEM_BranchAddOut;
-wire [9:0] EX_MEM_Control; // wb and mem only
+  wire [8:0] EX_MEM_Control; // wb and mem only
 wire [4:0] EX_MEM_rd; 
-wire [9:0] EX_MEM_Control_input;
+  wire [8:0] EX_MEM_Control_input;
 wire EX_MEM_zero;
-assign EX_MEM_Control_input = {ID_EX_Control[13:7], ID_EX_Control[4:3],ID_EX_Control[0]};
-assign targetAddress = ID_EX_PC + generatedImm;
-Register #(.N(111)) EX_MEM (.D({EX_MEM_Control_input,targerAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
+assign EX_MEM_Control_input = {ID_EX_Control[13:7], ID_EX_Control[4:3]};
+assign targetAddress = ID_EX_PC + ID_EX_Imm;
+  Register #(.N(111)) EX_MEM (.D({EX_MEM_Control_input,targetAddress,zf,ALUResult,ALUinput2,ID_EX_Rd}), .L(1'b1),.clk(clk),.rst(rst),
   .Q({EX_MEM_Control,EX_MEM_BranchAddOut,EX_MEM_zero,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd}));
 
-wire [9:0] MEM_WB_Control;
+  wire [2:0] MEM_WB_Control;
 wire [31:0] MEM_WB_Mem_Out, MEM_WB_ALUout;
 wire [4:0] MEM_WB_rd;
-wire [9:0] MEM_WB_Control_input;
+  wire [2:0] MEM_WB_Control_input;
 assign MEM_WB_Control_input = EX_MEM_Control[3:1];
-  Register #(.N(111)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_rd}),.L(1'b1),.clk(clk),.rst(rst),
+  Register #(.N(72)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_rd}),.L(1'b1),.clk(clk),.rst(rst),
                               .Q({MEM_WB_Control,MEM_WB_Mem_Out,MEM_WB_ALUout,MEM_WB_rd}));
+
+wire [1:0] forwardA;
+wire [1:0] forwardB;
+//forwarding_unit fu(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_EX_Rs2), .EXMEMRegisterRd(EX_MEM_Rd), .MEMWBRegisterRd(MEM_WB_Rd), .EXMEMRegWrite(EX_MEM_Ctrl[0] && !EX_MEM_Ctrl[3]), .MEMWBRegWrite(MEM_WB_Ctrl[0]), .forwardA(forwardA), .forwardB(forwardB));
+
 
 // control wires
 wire branch;
