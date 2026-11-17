@@ -130,9 +130,11 @@ rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
 prv32_ALU ALU(.a(ALUinput1), .b(ALUinput2), .shamt(ALUinput2[4:0]), .r(ALUResult), .cf(cf), .zf(zf), .vf(vf), .sf(sf), .alufn(ALUSel));
 
 // ALU to DataMem
-  DataMem DataMem(.clk(clk), .MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
+//  DataMem DataMem(.clk(clk), .MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
 .addr(EX_MEM_ALU_Out), .data_in(EX_MEM_StoreData), .data_out(dataMemOut));
 
+  SharedMemory SharedMem(.clk, .inst_addr, .MemRead, .MemWrite, .funct3,
+					.data_addr, .data_in, .data_out, .inst_out);
 
 
 
