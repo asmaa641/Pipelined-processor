@@ -14,8 +14,9 @@
 
 module Processor(input clk, 
 input rst); 
-wire [31:0] IF_ID_PC, IF_ID_Inst;
-	Register #(.N(64)) IF_ID (.D({pcout, instruction_mem_data_out}),.L(~halt && ~stall),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
+wire [63:0] IF_ID_Input;
+assign IF_ID_Input = flushIFID ? 64'b0 :{pcout, instruction_mem_data_out};
+	Register #(.N(64)) IF_ID (.D(IF_ID_Input),.L((~halt && ~stall) || flushIFID),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
 // Instruction to Control Unit
 ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_funct3]), .inst20(IF_ID_Inst[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
 
@@ -29,7 +30,7 @@ assign IF_ID_Func3 = {IF_ID_Inst[30], IF_ID_Inst[14:12]};
 assign IF_ID__rd = IF_ID_Inst[11:7];
 assign IF_ID__rs1 = IF_ID_Inst[19:15];
 assign IF_ID__rs2 = IF_ID_Inst[24:20];
-assign ID_EX_Control_input = stall ? 14'b0 : {branch,jal,jalr,lui,memRead,memWrite, RegWrite,ALUASel,ALUBSel,WBSel,ALUOp};
+assign ID_EX_Control_input = bubbleIDEX ? 14'b0 : {branch,jal,jalr,lui,memRead,memWrite, RegWrite,ALUASel,ALUBSel,WBSel,ALUOp};
 //wb = regwrite, wbsel
 // m = branch, jal, jalr, lui, memwrite, memRead
 // ex = aluasel, alubsel, aluop
@@ -58,13 +59,18 @@ wire [31:0] MEM_WB_WriteData;
     : (MEM_WB_Control[0] ? MEM_WB_Mem_Out : MEM_WB_ALUout);
 wire [1:0] forwardA;
 wire [1:0] forwardB;
-forwardingUnit fu(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_EX_Rs2), .EXMEMRegisterRd(EX_MEM_rd), .MEMWBRegisterRd(MEM_WB_rd), .EXMEMRegWrite(EX_MEM_Control[2]), .MEMWBRegWrite(MEM_WB_Control[2]), .forwardA(forwardA), .forwardB(forwardB));
+wire [31:0] ALU_input_A;
+wire [31:0] ALU_input_B;
+forwardingUnit forwarding_inst(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_EX_Rs2), .EXMEMRegisterRd(EX_MEM_rd), .MEMWBRegisterRd(MEM_WB_rd), .EXMEMRegWrite(EX_MEM_Control[2]), .MEMWBRegWrite(MEM_WB_Control[2]), .forwardA(forwardA), .forwardB(forwardB));
 	fourby1mux muxone (.in00(ID_EX_RegR1), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardA), .out(ALU_input_A));
 	fourby1mux muxtwo (.in00(ID_EX_RegR2), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardB), .out(ALU_input_B));
 
 	wire stall;
 	hazard_unit hu(.IFIDOpcode(IF_ID_Inst[6:0]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
 
+	wire flushIFID;
+	wire bubbleIDEX;
+	flushUnit flush_inst (.PCSel(PCSel), .stall(stall), .flushIFID(flushIFID), .bubbleIDEX(bubbleIDEX));
 
 // control wires
 wire branch;
@@ -107,7 +113,7 @@ wire [31:0] pc4OrtargetAddressOutput;
 wire [31:0] jalRTarget;
 
 // First step: PC Register
-Register pcdut (.D(pcin), .L(~halt && ~stall), .clk(clk), .rst(rst), .Q(pcout)); 
+Register pcdut (.D(pcin), .L((~halt && ~stall) || flushIFID), .clk(clk), .rst(rst), .Q(pcout)); 
 // when halt is zero -> load = 1, updates pc
 
 // instruction to register
@@ -129,8 +135,6 @@ rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
 prv32_ALU ALU(.a(ALUinput1), .b(ALUinput2), .shamt(ALUinput2[4:0]), .r(ALUResult), .cf(cf), .zf(zf), .vf(vf), .sf(sf), .alufn(ALUSel));
 
 // ALU to DataMem
-//  DataMem DataMem(.clk(clk), .MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
-.addr(EX_MEM_ALU_Out), .data_in(EX_MEM_RegR2), .data_out(dataMemOut));
 
 	SharedMemory SharedMem(.clk(clk), .inst_addr(pcout), .MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3[2:0]),
 						   .data_addr(EX_MEM_ALU_Out), .data_in(EX_MEM_RegR2), .data_out(dataMemOut), .inst_out(instruction_mem_data_out));
