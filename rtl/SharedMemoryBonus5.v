@@ -11,6 +11,7 @@
 *
 ********************************************************************/
 
+
 module SharedMemoryBonus5(
     input clk,
     input [31:0] inst_addr,
@@ -51,9 +52,11 @@ assign byte_offset = selected_addr[1:0];
 // Memory write and completion
 always @(posedge clk) begin
 
-    data_done <= 1'b0;
+    if (!data_request) begin
+        data_done <= 1'b0;
+    end
 
-    if (data_grant) begin
+    else if (!data_done) begin
 
         data_done <= 1'b1;
 
@@ -156,3 +159,4 @@ always @(*) begin
 end
 
 endmodule
+
