@@ -1,47 +1,37 @@
-/*******************************************************************
-*
-* Module: regFile
-* Project: RISCV Processor
-* Author: Asmaa Elshabshiri
-* Emails: asmaaelshabshiri@aucegypt.edu
-* Description: The register file of the datapath
-* Change history: 10/29/2026 = edited for clarity
-*
-**********************************************************************/
-`include "defines.v"
 
-module RegFile (
-    input clk,
-    input rst,
-    input [4:0] readreg1,
-    input [4:0] readreg2,
-    input [4:0] writereg,
+module RegFile #(parameter N = 32) (
+
+    input clk, rst,
+    input [4:0] readreg1, readreg2, writereg,
+
     input [31:0] writedata,
     input regwrite,
-    output [31:0] readdata1,
-    output [31:0] readdata2
+
+    output [31:0] readdata1, readdata2
 );
 
-    wire [31:0] q [0:31];
-    reg [31:0] load;
+    wire [31:0] q [0:N-1];
+    reg [N-1:0] load;
 
     always @(*) begin
-        load = 32'd0;
+        load = {N{1'b0}};
 
-        if (regwrite && writereg != 5'd0)
+        if (regwrite == 1'b1 && writereg != 5'd0)
             load[writereg] = 1'b1;
     end
 
     genvar j;
     generate
-        for (j = 0; j < 32; j = j + 1) begin : register_array
-            Register register_inst (
+        for (j = 0; j < N; j = j + 1) begin
+
+            RegNeg register (
                 .D(writedata),
                 .L(load[j]),
                 .clk(clk),
                 .rst(rst),
                 .Q(q[j])
             );
+
         end
     endgenerate
 
