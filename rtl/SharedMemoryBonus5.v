@@ -1,7 +1,7 @@
 
 /*******************************************************************
 *
-* Module: SharedMemory_Bonus5
+* Module: SharedMemoryBonus5
 * Project: RISCV Processor
 * Author: Asmaa Elshabshiri
 * Description: Shared single-ported, byte-addressable memory with
@@ -22,7 +22,7 @@
 *
 
 
-module SharedMemory_Bonus5(
+module SharedMemoryBonus5(
     input clk,
     input [31:0] inst_addr,
     input MemRead,
