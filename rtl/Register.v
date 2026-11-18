@@ -10,35 +10,37 @@
 * Change history: 10/29/2026 = Edited for clarity and bit lengths
 *
 **********************************************************************/
-module Register (
-    input [31:0] D,
+module RegNeg #(parameter N = 32) (
+    input [N-1:0] D,
     input L,
     input clk,
     input rst,
-    output [31:0] Q
+    output [N-1:0] Q
 );
 
-    wire [31:0] muxoutput;
+wire [N-1:0] muxoutput;
 
-    genvar j;
-    generate
-        for (j = 0; j < 32; j = j + 1) begin : genmodule
+genvar j;
 
-            TwoBy1Mux mux_inst (
-                .A(Q[j]),
-                .B(D[j]),
-                .S(L),
-                .C(muxoutput[j])
-            );
+generate
+    for (j = 0; j < N; j = j + 1) begin: genmodule
 
-            DFlipFlop dff_inst (
-                .clk(clk),
-                .rst(rst),
-                .D(muxoutput[j]),
-                .Q(Q[j])
-            );
+        twoby1mux  m1(
+            .A(Q[j]),
+            .B(D[j]),
+            .L(L),
+            .C(muxoutput[j])
+        );
 
-        end
-    endgenerate
+        DFFneg D1(
+            .clk(clk),
+            .rst(rst),
+            .D(muxoutput[j]),
+            .Q(Q[j])
+        );
+
+    end
+endgenerate
 
 endmodule
+
