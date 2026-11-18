@@ -12,7 +12,7 @@
 **********************************************************************/
 `include "defines.v"
 
-module ControlUnit (input [4:0] opcode, input [2:0] funct3, input inst20, output reg branch, output reg jal, output reg jalr, output reg lui, output reg memRead, output reg memWrite, output reg regWrite, output reg ALUASel, output reg ALUBSel, output reg [1:0] WBSel, output reg  [2:0] ALUOp, output reg halt);
+module ControlUnit (input [6:0] opcode, input [2:0] funct3, input inst20, output reg branch, output reg jal, output reg jalr, output reg lui, output reg memRead, output reg memWrite, output reg regWrite, output reg ALUASel, output reg ALUBSel, output reg [1:0] WBSel, output reg  [2:0] ALUOp, output reg halt);
 
 always @(*) begin
 //defaults
