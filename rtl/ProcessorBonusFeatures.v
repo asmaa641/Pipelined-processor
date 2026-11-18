@@ -15,18 +15,28 @@
 module ProcessorBonusFeatures(input clk, 
 input rst); 
 
-// Phase Controller
-// phase = 0: C0
-// phase = 1: C1
-reg phase;
-always @(posedge clk or posedge rst) begin
-    if (rst)
-        phase <= 1'b1;
-    else
-        phase <= ~phase;
-end
-wire C0 = ~phase;
-wire C1 = phase;
+
+wire stall;
+wire flushIFID;
+wire bubbleIDEX;
+// Memory arbitration signals
+wire data_grant;
+wire inst_grant;
+wire data_done;
+
+wire data_request;
+wire memory_wait;
+wire pipeline_stall;
+
+// Data memory request
+assign data_request = EX_MEM_Control[4] || EX_MEM_Control[3]; //memwrite and memread
+
+// Memory request is waiting until serviced
+assign memory_wait = data_request && !data_done;
+
+// Data memory has priority over instruction fetch
+assign pipeline_stall = stall || data_request;
+
 // Control Signals
 wire branch, jal, jalr, lui;
 wire memRead, memWrite, RegWrite, halt;
@@ -38,9 +48,7 @@ wire [3:0] ALUSel;
 wire cf, zf, vf, sf;
 wire [1:0] PCSel;
 
-wire stall;
-wire flushIFID;
-wire bubbleIDEX;
+
 // Data Wires
 wire [31:0] instruction_mem_data_out; 
 wire [31:0] pcout;
@@ -70,15 +78,14 @@ wire [31:0] IF_ID_PC;
 wire [31:0] IF_ID_Inst;
 wire [63:0] IF_ID_Input;
 assign IF_ID_Input = flushIFID ? {32'b0, 32'h00000013} : {pcout, instruction_mem_data_out}; //ADDI x0, x0, 0
-Register #(.N(64)) IF_ID (.D(IF_ID_Input),.L(C0 &&((~halt && ~stall) || flushIFID)),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
+	Register #(.N(64)) IF_ID (.D(IF_ID_Input),.L((~halt && ~pipeline_stall) || flushIFID),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
 
 // Instruction to Control Unit
 ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_funct3]), .inst20(IF_ID_Inst[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
 
 // Register File
-// Register reads during C1
-// Register writes during C0
-RegFile register(.clk(clk), .rst(rst), .readreg1(IF_ID_Inst[`IR_rs1]), .readreg2(IF_ID_Inst[`IR_rs2]), .writereg(MEM_WB_rd), .writedata(MEM_WB_WriteData), .regwrite(MEM_WB_Control[2] && C0), .readdata1(readdata1),.readdata2(readdata2));
+
+	RegFile register(.clk(clk), .rst(rst), .readreg1(IF_ID_Inst[`IR_rs1]), .readreg2(IF_ID_Inst[`IR_rs2]), .writereg(MEM_WB_rd), .writedata(MEM_WB_WriteData), .regwrite(MEM_WB_Control[2] && ~memory_wait), .readdata1(readdata1),.readdata2(readdata2));
 
 // Immediate Generator
 rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
@@ -99,11 +106,12 @@ assign IF_ID_Func3 = {IF_ID_Inst[30], IF_ID_Inst[14:12]};
 assign IF_ID__rd = IF_ID_Inst[11:7];
 assign IF_ID__rs1 = IF_ID_Inst[19:15];
 assign IF_ID__rs2 = IF_ID_Inst[24:20];
-assign ID_EX_Control_input = (bubbleIDEX || halt) ? 14'b0 : {branch,jal,jalr,lui,memRead,memWrite, RegWrite,ALUASel,ALUBSel,WBSel,ALUOp};
+// A memory request has completed, insert a bubble because the front of the pipeline was stalled while the memory request was being serviced
+assign ID_EX_Control_input = (bubbleIDEX || halt || (data_request && data_done)) ? 14'b0 : {branch,jal,jalr,lui,memRead,memWrite, RegWrite,ALUASel,ALUBSel,WBSel,ALUOp};
 //wb = regwrite, wbsel
 // m = branch, jal, jalr, lui, memwrite, memRead
 // ex = aluasel, alubsel, aluop
-Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(C1),.clk(clk),.rst(rst),
+	Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(!memory_wait),.clk(clk),.rst(rst),
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 // forwarding unit
@@ -111,7 +119,7 @@ forwardingUnit forwarding_inst(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_
 fourby1mux muxone (.in00(ID_EX_RegR1), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardA), .out(ALU_input_A));
 fourby1mux muxtwo (.in00(ID_EX_RegR2), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardB), .out(ALU_input_B));
 
-// execute: c0
+// execute: 
 assign targetAddress = ID_EX_PC + ID_EX_Imm;
 // ALUinput1
 TwoBy1Mux ALUinput1mux(.A(ALU_input_A), .B(ID_EX_PC), .S(ID_EX_Control[6]), .C(ALUinput1));
@@ -129,33 +137,35 @@ wire [4:0] EX_MEM_Control; // wb and mem only
 wire [4:0] EX_MEM_rd; 
 wire [4:0] EX_MEM_Control_input;
 wire [2:0] EX_MEM_Func3;
-assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memread,memwrite,regwrite,wbsel
-	Register #(.N(109)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,ALUResult,ALU_input_B,ID_EX_Rd, ID_EX_Func3[2:0]}), .L(C0),.clk(clk),.rst(rst),
+	assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memread,memwrite,regwrite,wbsel
+// // EX/MEM holds its request until the memory completes it.
+Register #(.N(109)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,ALUResult,ALU_input_B,ID_EX_Rd, ID_EX_Func3[2:0]}), .L(!memory_wait),.clk(clk),.rst(rst),
                               .Q({EX_MEM_Control,EX_MEM_PCPlus4,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd, EX_MEM_Func3}));
 
-// Memory access: C1
-SharedMemoryBonus5 SharedMem(.clk(clk), .inst_addr(pcout),.MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
-							 .data_addr(EX_MEM_ALU_Out), .data_in(EX_MEM_RegR2), .data_out(dataMemOut), .inst_out(instruction_mem_data_out), .data_grant(data_grant), .inst_grant(inst_grant));
+// Memory access: 
+	SharedMemoryBonus5 SharedMem(.clk(clk), .rst(rst),.inst_addr(pcout),.MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
+							 .data_addr(EX_MEM_ALU_Out), .data_in(EX_MEM_RegR2), .data_out(dataMemOut), .inst_out(instruction_mem_data_out), .data_grant(data_grant), .inst_grant(inst_grant), .data_done(data_done));
 
-	//MEM/WB (C1)
+	//MEM/WB 
 wire [2:0] MEM_WB_Control;
 wire [31:0] MEM_WB_Mem_Out, MEM_WB_ALUout, MEM_WB_PCPlus4;
 wire [4:0] MEM_WB_rd;
 wire [2:0] MEM_WB_Control_input;
 assign MEM_WB_Control_input = EX_MEM_Control[2:0]; // regwrite,wbsel
-Register #(.N(104)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_PCPlus4,EX_MEM_rd}),.L(C1),.clk(clk),.rst(rst),
+// MEM/WB captures the result when the memory request completes
+Register #(.N(104)) MEM_WB (.D({MEM_WB_Control_input, dataMemOut, EX_MEM_ALU_Out,EX_MEM_PCPlus4,EX_MEM_rd}),.L(!memory_wait),.clk(clk),.rst(rst),
                               .Q({MEM_WB_Control,MEM_WB_Mem_Out,MEM_WB_ALUout,MEM_WB_PCPlus4,MEM_WB_rd}));
 wire [31:0] MEM_WB_WriteData;
 assign MEM_WB_WriteData = MEM_WB_Control[1] ? MEM_WB_PCPlus4
     : (MEM_WB_Control[0] ? MEM_WB_Mem_Out : MEM_WB_ALUout);
 
-// Program counter (C0)
+// Program counter 
 assign pcplus4 = pcout +4;
 TwoBy1Mux pc4OrtargetAddress(.A(pcplus4), .B(targetAddress), .S(PCSel[0]), .C(pc4OrtargetAddressOutput));
 assign jalRTarget = {ALUResult[31:1], 1'b0};
 TwoBy1Mux pc4OrtargetAddressorJal(.A(pc4OrtargetAddressOutput), .B(jalRTarget), .S(PCSel[1]), .C(pcin));
 
-Register pcdut (.D(pcin), .L(C0 && ((~halt && ~stall) || flushIFID)), .clk(clk), .rst(rst), .Q(pcout)); 
+	Register pcdut (.D(pcin), .L((!halt && !pipeline_stall) || flushIFID), .clk(clk), .rst(rst), .Q(pcout)); 
 // when halt is zero -> load = 1, updates pc
 
 
