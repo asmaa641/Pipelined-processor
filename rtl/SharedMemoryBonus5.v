@@ -14,6 +14,7 @@
 
 module SharedMemoryBonus5(
     input clk,
+    input rst,
     input [31:0] inst_addr,
     input MemRead,
     input MemWrite,
@@ -52,45 +53,50 @@ assign byte_offset = selected_addr[1:0];
 // Memory write and completion
 always @(posedge clk) begin
 
-    if (!data_request) begin
+    if (rst) begin
         data_done <= 1'b0;
     end
 
-    else if (!data_done) begin
+    else begin
 
-        data_done <= 1'b1;
+        data_done <= 1'b0;
 
-        if (MemWrite) begin
+        if (data_grant) begin
 
-            case (funct3)
+            data_done <= 1'b1;
 
-                3'b000: begin // SB
-                    case (byte_offset)
-                        2'b00: mem[word_index][7:0] <= data_in[7:0];
-                        2'b01: mem[word_index][15:8] <= data_in[7:0];
-                        2'b10: mem[word_index][23:16] <= data_in[7:0];
-                        2'b11: mem[word_index][31:24] <= data_in[7:0];
-                    endcase
-                end
+            if (MemWrite) begin
 
-                3'b001: begin // SH
-                    case (byte_offset)
-                        2'b00: mem[word_index][15:0] <= data_in[15:0];
-                        2'b10: mem[word_index][31:16] <= data_in[15:0];
-                        default: begin
-                        end
-                    endcase
-                end
+                case (funct3)
 
-                3'b010: begin // SW
-                    if (byte_offset == 2'b00)
-                        mem[word_index] <= data_in;
-                end
+                    3'b000: begin // SB
+                        case (byte_offset)
+                            2'b00: mem[word_index][7:0] <= data_in[7:0];
+                            2'b01: mem[word_index][15:8] <= data_in[7:0];
+                            2'b10: mem[word_index][23:16] <= data_in[7:0];
+                            2'b11: mem[word_index][31:24] <= data_in[7:0];
+                        endcase
+                    end
 
-                default: begin
-                end
+                    3'b001: begin // SH
+                        case (byte_offset)
+                            2'b00: mem[word_index][15:0] <= data_in[15:0];
+                            2'b10: mem[word_index][31:16] <= data_in[15:0];
+                            default: begin
+                            end
+                        endcase
+                    end
 
-            endcase
+                    3'b010: begin // SW
+                        if (byte_offset == 2'b00)
+                            mem[word_index] <= data_in;
+                    end
+
+                    default: begin
+                    end
+
+                endcase
+            end
         end
     end
 end
