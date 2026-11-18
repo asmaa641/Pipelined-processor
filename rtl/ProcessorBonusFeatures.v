@@ -134,8 +134,8 @@ assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memrea
                               .Q({EX_MEM_Control,EX_MEM_PCPlus4,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd, EX_MEM_Func3}));
 
 // Memory access: C1
-SharedMemory SharedMem(.clk(clk), .phase(phase), .inst_addr(pcout),.MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
-	.data_addr(EX_MEM_ALU_Out), .data_in(EX_MEM_RegR2), .data_out(dataMemOut), .inst_out(instruction_mem_data_out));
+SharedMemoryBonus5 SharedMem(.clk(clk), .inst_addr(pcout),.MemRead(EX_MEM_Control[4]), .MemWrite(EX_MEM_Control[3]), .funct3(EX_MEM_Func3),
+							 .data_addr(EX_MEM_ALU_Out), .data_in(EX_MEM_RegR2), .data_out(dataMemOut), .inst_out(instruction_mem_data_out), .data_grant(data_grant), .inst_grant(inst_grant));
 
 	//MEM/WB (C1)
 wire [2:0] MEM_WB_Control;
