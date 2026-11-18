@@ -107,7 +107,7 @@ Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdat
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 // forwarding unit
-forwardingUnit forwarding_inst(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_EX_Rs2), .EXMEMRegisterRd(EX_MEM_rd), .MEMWBRegisterRd(MEM_WB_rd), .EXMEMRegWrite(EX_MEM_Control[2]), .MEMWBRegWrite(MEM_WB_Control[2]), .forwardA(forwardA), .forwardB(forwardB));
+forwardingUnit forwarding_inst(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_EX_Rs2), .EXMEMRegisterRd(EX_MEM_rd), .MEMWBRegisterRd(MEM_WB_rd), .EXMEMRegWrite(EX_MEM_Control[2] && !EX_MEM_Control[4]), .MEMWBRegWrite(MEM_WB_Control[2]), .forwardA(forwardA), .forwardB(forwardB));
 fourby1mux muxone (.in00(ID_EX_RegR1), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardA), .out(ALU_input_A));
 fourby1mux muxtwo (.in00(ID_EX_RegR2), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardB), .out(ALU_input_B));
 
@@ -130,7 +130,6 @@ wire [4:0] EX_MEM_rd;
 wire [4:0] EX_MEM_Control_input;
 wire [2:0] EX_MEM_Func3;
 assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memread,memwrite,regwrite,wbsel
-assign targetAddress = ID_EX_PC + ID_EX_Imm;
 	Register #(.N(109)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,ALUResult,ALU_input_B,ID_EX_Rd, ID_EX_Func3[2:0]}), .L(C0),.clk(clk),.rst(rst),
                               .Q({EX_MEM_Control,EX_MEM_PCPlus4,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd, EX_MEM_Func3}));
 
@@ -156,12 +155,8 @@ TwoBy1Mux pc4OrtargetAddress(.A(pcplus4), .B(targetAddress), .S(PCSel[0]), .C(pc
 assign jalRTarget = {ALUResult[31:1], 1'b0};
 TwoBy1Mux pc4OrtargetAddressorJal(.A(pc4OrtargetAddressOutput), .B(jalRTarget), .S(PCSel[1]), .C(pcin));
 
-Register pcdut (.D(pcin), .L((~halt && ~stall) || flushIFID), .clk(clk), .rst(rst), .Q(pcout)); 
+Register pcdut (.D(pcin), .L(C0 && ((~halt && ~stall) || flushIFID)), .clk(clk), .rst(rst), .Q(pcout)); 
 // when halt is zero -> load = 1, updates pc
-
-
-TwoBy1Mux dataMemOrALUMUX(.A(MEM_WB_ALU_Out), .B(MEM_WB_DataMemOut), .S(MEM_WB_Control[0]), .C(dataMemOrALUMUXOutput));
-TwoBy1Mux PCorDMorALU(.A(dataMemOrALUMUXOutput), .B(MEM_WB_PCplus4), .S(MEM_WB_Control[1]), .C(write_data));
 
 
 BranchUnit branchU(.branch(ID_EX_Control[13]),.jal(ID_EX_Control[12]), .jalr(ID_EX_Control[11]), .funct3(ID_EX_Func3[2:0]), .cf(cf),.zf(zf),.vf(vf), .sf(sf),.PCSel(PCSel));
