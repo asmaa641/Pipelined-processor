@@ -1,13 +1,13 @@
 
-module SharedMemory(input clk, input[31:0] inst_addr, input MemRead, input MemWrite, input [2:0] funct3,
+module SharedMemory(input clk, input phase, input[31:0] inst_addr, input MemRead, input MemWrite, input [2:0] funct3,
 					input [31:0] data_addr, input [31:0] data_in, output reg [31:0] data_out, output reg [31:0] inst_out);
 
 reg [31:0] mem [0:63];
 
-	wire data_access; // inst mem or data mem
-	wire [31:0] mem_addr;
-	assign data_access = MemRead | MemWrite;
-	assign mem_addr = data_access ? data_addr : inst_addr;
+wire data_access; // inst mem or data mem
+wire [31:0] mem_addr;
+assign data_access = phase && (MemRead || MemWrite); 
+assign mem_addr = data_access ? data_addr : inst_addr;
 wire [5:0] word_index;
 wire [1:0] byte_offset;
 
@@ -17,7 +17,7 @@ assign byte_offset = data_addr[1:0];
 // do synchronous write
 always@(posedge clk)
 begin
-    if(MemWrite == 1'b1) begin
+	if(data_access && MemWrite) begin
 	case (funct3)
 		3'b000: begin // sb
         case (byte_offset)
@@ -49,10 +49,10 @@ end
 	always@(*) begin
 			inst_out = 32'b0;
 	       data_out = 32'b0;
-		if(!data_access) begin
-			inst_out = mem[word_index];
+		if(phase == 1'b0) begin
+			inst_out = mem[inst_addr[7:2]];
 		end
-		else if(MemRead == 1'b1) begin
+		else if(phase == 1'b1 && MemRead == 1'b1) begin
 	       case (funct3) 
 	          3'b000: begin // lb
                 case (byte_offset)
