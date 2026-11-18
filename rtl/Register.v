@@ -10,7 +10,7 @@
 * Change history: 10/29/2026 = Edited for clarity and bit lengths
 *
 **********************************************************************/
-module RegNeg #(parameter N = 32) (
+module Register #(parameter N = 32) (
     input [N-1:0] D,
     input L,
     input clk,
