@@ -15,7 +15,7 @@
 
 `include "defines.v"
 
-module (input [4:0] IFIDOpcode, input [4:0] IFIDRegisterRs1, input [4:0] IFIDRegisterRs2, input [4:0] IDEXRegisterRd, input IDEXMemRead, output stall);
+module HazardUnit(input [4:0] IFIDOpcode, input [4:0] IFIDRegisterRs1, input [4:0] IFIDRegisterRs2, input [4:0] IDEXRegisterRd, input IDEXMemRead, output stall);
 
 //for which source registers the decode instruction needs
 reg usesRs1;
@@ -59,7 +59,7 @@ endcase
 
 end
 
-assign stall = (IDEXMemRead == 1’b1) && (IDEXRegisterRd != `REG_X0) && 
+assign stall = (IDEXMemRead == 1'b1) && (IDEXRegisterRd != `REG_X0) && 
 ((usesRs1 && (IDEXRegisterRd == IFIDRegisterRs1))  || 
 (usesRs2 && (IDEXRegisterRd == IFIDRegisterRs2)));
 

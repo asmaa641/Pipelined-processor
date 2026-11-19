@@ -74,3 +74,20 @@
 `define     SH_SRL          2'b00
 `define     SH_SLL          2'b01
 `define     SH_SRA          2'b10
+
+`define     FWD_REG         2'b00
+`define     FWD_MEMWB       2'b01
+`define     FWD_EXMEM       2'b10
+`define     REG_X0          5'b00000
+
+`define MD_FUNCT7  7'b0000001
+`define MD_MUL     3'b000
+`define MD_MULH    3'b001
+`define MD_MULHSU  3'b010
+`define MD_MULHU   3'b011
+`define MD_DIV     3'b100
+`define MD_DIVU    3'b101
+`define MD_REM     3'b110
+`define MD_REMU    3'b111
+`define ALL_ONES   32'hFFFFFFFF
+
