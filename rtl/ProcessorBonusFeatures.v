@@ -91,7 +91,7 @@ ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_func
 rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
 
 // Hazard and flush control
-hazard_unit hazard_inst(.IFIDOpcode(IF_ID_Inst[6:0]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
+hazardUnit hazard_inst(.IFIDOpcode(IF_ID_Inst[6:0]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
 
 flushUnit flush_inst (.PCSel(PCSel), .stall(stall), .flushIFID(flushIFID), .bubbleIDEX(bubbleIDEX));
 

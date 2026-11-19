@@ -3,7 +3,7 @@ verilog xil_defaultlib  \
 "../../../../../rtl/ALUControl.v" \
 "../../../../../rtl/DFlipFlop.v" \
 "../../../../../rtl/ForwardingUnit.v" \
-"../../../../PipelinedMS3.srcs/sources_1/new/ProcessorBonusFeatures.v" \
+"../../../../../rtl/ProcessorBonusFeatures.v" \
 "../../../../../rtl/RegFile.v" \
 "../../../../../rtl/Register.v" \
 "../../../../../rtl/SharedMemoryBonus5.v" \
@@ -11,7 +11,7 @@ verilog xil_defaultlib  \
 "../../../../../rtl/controlUnit.v" \
 "../../../../../rtl/flushUnit.v" \
 "../../../../../rtl/fourby1mux.v" \
-"../../../../../rtl/mulDivUnit.v" \
+"../../../../../rtl/hazardUnit.v" \
 "../../../../../rtl/prv32_ALU.v" \
 "../../../../../rtl/rv32_ImmGen.v" \
 "../../../../../rtl/shifter.v" \
