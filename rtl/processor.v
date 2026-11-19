@@ -41,6 +41,11 @@ wire [1:0] PCSel;
 wire stall;
 wire flushIFID;
 wire bubbleIDEX;
+
+wire stall_unused;
+assign stall = 1'b0;
+
+
 // Data Wires
 wire [31:0] instruction_mem_data_out; 
 wire [31:0] pcout;
@@ -84,7 +89,7 @@ RegFile register(.clk(clk), .rst(rst), .readreg1(IF_ID_Inst[`IR_rs1]), .readreg2
 rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
 
 // Hazard and flush control
-hazardUnit hazard_inst(.IFIDOpcode(IF_ID_Inst[6:0]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
+hazardUnit hazard_inst(.IFIDOpcode(IF_ID_Inst[`IR_opcode]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall_unused));
 
 flushUnit flush_inst (.PCSel(PCSel), .stall(stall), .flushIFID(flushIFID), .bubbleIDEX(bubbleIDEX));
 

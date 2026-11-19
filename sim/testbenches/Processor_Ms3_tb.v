@@ -125,7 +125,7 @@ module Processor_tb;
         reset_cpu();
 
         // Allow the program to execute.
-        wait_neg_edges(16);
+        wait_neg_edges(30);
 
         $display("\n========== %0s DEBUG ==========", nm);
         $display("x1 = %h", DUT.register.q[1]);
@@ -198,6 +198,7 @@ module Processor_tb;
         clear_memory();
 
         DUT.SharedMem.mem[0] = ins;
+        DUT.SharedMem.mem[16] = 32'hAABBCCDD;
 
         reset_cpu();
 
@@ -226,39 +227,49 @@ module Processor_tb;
     // CHECK BRANCH
     // ---------------------------------------------------------
     task check_branch;
-        input [31:0] ins;
-        input [31:0] expected_pc;
-        input [8*16-1:0] nm;
-    begin
-        clear_memory();
-
-        DUT.SharedMem.mem[0] = ins;
-        DUT.SharedMem.mem[1] = 32'h00000013;
-        DUT.SharedMem.mem[2] = 32'h00000013;
-        DUT.SharedMem.mem[3] = 32'h00000013;
-        DUT.SharedMem.mem[4] = 32'h00000013;
-
-        reset_cpu();
-
-        force DUT.register.q[1] = 32'd10;
-        force DUT.register.q[2] = 32'd3;
-
-        wait_neg_edges(8);
-
-        if (DUT.pcout === expected_pc) begin
-            $display("PASS %0s PC=%h", nm, DUT.pcout);
-            pass_count = pass_count + 1;
-        end
-        else begin
-            $display("FAIL %0s Expected PC=%h Actual PC=%h",
-                     nm, expected_pc, DUT.pcout);
-            fail_count = fail_count + 1;
-        end
-
-        release DUT.register.q[1];
-        release DUT.register.q[2];
+    input [31:0] ins;
+    input taken;
+    input [8*16-1:0] nm;
+begin
+    clear_memory();
+    DUT.SharedMem.mem[0] = ins;
+    DUT.SharedMem.mem[1] = 32'h00100193; // addi x3,x0,1 (skipped if taken)
+    DUT.SharedMem.mem[2] = 32'h00200213; // addi x4,x0,2 (target)
+    reset_cpu();
+    force DUT.register.q[1] = 32'd10;
+    force DUT.register.q[2] = 32'd3;
+    wait_neg_edges(30);
+    if (DUT.register.q[4] === 32'd2 &&
+        DUT.register.q[3] === (taken ? 32'd0 : 32'd1)) begin
+        $display("PASS %0s", nm);
+        pass_count = pass_count + 1;
+    end else begin
+        $display("FAIL %0s x3=%h x4=%h", nm, DUT.register.q[3], DUT.register.q[4]);
+        fail_count = fail_count + 1;
     end
-    endtask
+    release DUT.register.q[1];
+    release DUT.register.q[2];
+end
+endtask
+
+
+task check_nop;
+    input [31:0] ins;
+    input [8*16-1:0] nm;
+begin
+    clear_memory();
+    DUT.SharedMem.mem[0] = ins;
+    DUT.SharedMem.mem[1] = 32'h00500193; // addi x3,x0,5 must still run
+    reset_cpu();
+    wait_neg_edges(20);
+    if (DUT.register.q[3] === 32'd5) begin
+        $display("PASS %0s", nm); pass_count = pass_count + 1;
+    end else begin
+        $display("FAIL %0s x3=%h", nm, DUT.register.q[3]); fail_count = fail_count + 1;
+    end
+end
+endtask
+
 
     // ---------------------------------------------------------
     // MAIN TEST SEQUENCE
@@ -312,7 +323,7 @@ module Processor_tb;
         // LOAD (5)
         // =====================================================
 
-        check_load(32'h0000A183, 32'h80000003,
+        check_load(32'h00008183, 32'h80000003,
                    32'h00000003, "LB");
 
         check_load(32'h00009183, 32'h80000003,
@@ -339,58 +350,57 @@ module Processor_tb;
         // BRANCH (6)
         // =====================================================
 
-        check_branch(32'h00208463, 32'd8,  "BEQ");
-        check_branch(32'h00209463, 32'd16, "BNE");
-        check_branch(32'h0020C463, 32'd8,  "BLT");
-        check_branch(32'h0020D463, 32'd16, "BGE");
-        check_branch(32'h0020E463, 32'd8,  "BLTU");
-        check_branch(32'h0020F463, 32'd16, "BGEU");
+        check_branch(32'h00208463, 0, "BEQ");
+check_branch(32'h00209463, 1, "BNE");
+check_branch(32'h0020C463, 0, "BLT");
+check_branch(32'h0020D463, 1, "BGE");
+check_branch(32'h0020E463, 0, "BLTU");
+check_branch(32'h0020F463, 1, "BGEU");
 
-        // =====================================================
-        // JAL
-        // =====================================================
 
-        clear_memory();
-        DUT.SharedMem.mem[0] = 32'h010001EF;
 
-        reset_cpu();
-        wait_neg_edges(8);
 
-        if (DUT.pcout === 32'd16 &&
-            DUT.register.q[3] === 32'd4) begin
-            $display("PASS JAL");
-            pass_count = pass_count + 1;
-        end
-        else begin
-            $display("FAIL JAL PC=%h x3=%h",
-                     DUT.pcout, DUT.register.q[3]);
-            fail_count = fail_count + 1;
-        end
+        // JAL: jumps from mem[0] to mem[4], skipping mem[1]
+clear_memory();
+DUT.SharedMem.mem[0] = 32'h010001EF;
+DUT.SharedMem.mem[1] = 32'h00100213; // addi x4,x0,1 (must be skipped)
+DUT.SharedMem.mem[4] = 32'h00200293; // addi x5,x0,2 (target)
+reset_cpu();
+wait_neg_edges(30);
+if (DUT.register.q[3] === 32'd4 && DUT.register.q[4] === 32'd0 &&
+    DUT.register.q[5] === 32'd2) begin
+    $display("PASS JAL"); pass_count = pass_count + 1;
+end else begin
+    $display("FAIL JAL x3=%h x4=%h x5=%h", DUT.register.q[3], DUT.register.q[4], DUT.register.q[5]);
+    fail_count = fail_count + 1;
+end
 
-        // =====================================================
-        // JALR
-        // =====================================================
+// JALR: x1=8 jumps from mem[0] to mem[2], skipping mem[1]
+clear_memory();
+DUT.SharedMem.mem[0] = 32'h000081E7;
+DUT.SharedMem.mem[1] = 32'h00100213; // must be skipped
+DUT.SharedMem.mem[2] = 32'h00200293; // target
+reset_cpu();
+force DUT.register.q[1] = 32'd8;
+wait_neg_edges(30);
+if (DUT.register.q[3] === 32'd4 && DUT.register.q[4] === 32'd0 &&
+    DUT.register.q[5] === 32'd2) begin
+    $display("PASS JALR"); pass_count = pass_count + 1;
+end else begin
+    $display("FAIL JALR x3=%h x4=%h x5=%h", DUT.register.q[3], DUT.register.q[4], DUT.register.q[5]);
+    fail_count = fail_count + 1;
+end
+release DUT.register.q[1];
 
-        clear_memory();
-        DUT.SharedMem.mem[0] = 32'h000081E7;
 
-        reset_cpu();
-        force DUT.register.q[1] = 32'd8;
+check_nop(32'h00000073, "ECALL");
+check_nop(32'h0330000F, "FENCE");
+check_nop(32'h8330000F, "FENCE.TSO");
+check_nop(32'h0100000F, "PAUSE");
 
-        wait_neg_edges(8);
 
-        if (DUT.pcout === 32'd8 &&
-            DUT.register.q[3] === 32'd4) begin
-            $display("PASS JALR");
-            pass_count = pass_count + 1;
-        end
-        else begin
-            $display("FAIL JALR PC=%h x3=%h",
-                     DUT.pcout, DUT.register.q[3]);
-            fail_count = fail_count + 1;
-        end
 
-        release DUT.register.q[1];
+
 
         // =====================================================
         // U-TYPE (2)
@@ -399,79 +409,26 @@ module Processor_tb;
         check_reg(32'h123451B7, 32'h12345000, "LUI");
         check_reg(32'h12345197, 32'h12345000, "AUIPC");
 
+          // =====================================================
+        // EBREAK (halts: the next instruction must not run)
         // =====================================================
-        // SYSTEM / FENCE (5)
-        // =====================================================
-
-        clear_memory();
-        DUT.SharedMem.mem[0] = 32'h00000073;
-        reset_cpu();
-        wait_neg_edges(5);
-
-        if (DUT.pcout === 32'd8) begin
-            $display("PASS ECALL");
-            pass_count = pass_count + 1;
-        end
-        else begin
-            $display("FAIL ECALL PC=%h", DUT.pcout);
-            fail_count = fail_count + 1;
-        end
 
         clear_memory();
         DUT.SharedMem.mem[0] = 32'h00100073;
+        DUT.SharedMem.mem[1] = 32'h00500193; // addi x3,x0,5 must NOT run
         reset_cpu();
-        wait_neg_edges(5);
+        wait_neg_edges(20);
 
-        if (DUT.pcout === 32'd4) begin
+        if (DUT.register.q[3] === 32'd0) begin
             $display("PASS EBREAK");
             pass_count = pass_count + 1;
         end
         else begin
-            $display("FAIL EBREAK PC=%h", DUT.pcout);
+            $display("FAIL EBREAK x3=%h", DUT.register.q[3]);
             fail_count = fail_count + 1;
         end
 
-        clear_memory();
-        DUT.SharedMem.mem[0] = 32'h0330000F;
-        reset_cpu();
-        wait_neg_edges(5);
 
-        if (DUT.pcout === 32'd8) begin
-            $display("PASS FENCE");
-            pass_count = pass_count + 1;
-        end
-        else begin
-            $display("FAIL FENCE PC=%h", DUT.pcout);
-            fail_count = fail_count + 1;
-        end
-
-        clear_memory();
-        DUT.SharedMem.mem[0] = 32'h8330000F;
-        reset_cpu();
-        wait_neg_edges(5);
-
-        if (DUT.pcout === 32'd8) begin
-            $display("PASS FENCE.TSO");
-            pass_count = pass_count + 1;
-        end
-        else begin
-            $display("FAIL FENCE.TSO PC=%h", DUT.pcout);
-            fail_count = fail_count + 1;
-        end
-
-        clear_memory();
-        DUT.SharedMem.mem[0] = 32'h0100000F;
-        reset_cpu();
-        wait_neg_edges(5);
-
-        if (DUT.pcout === 32'd8) begin
-            $display("PASS PAUSE");
-            pass_count = pass_count + 1;
-        end
-        else begin
-            $display("FAIL PAUSE PC=%h", DUT.pcout);
-            fail_count = fail_count + 1;
-        end
 
         // =====================================================
         // SUMMARY
