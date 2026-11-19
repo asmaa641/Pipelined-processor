@@ -1,0 +1,1551 @@
+Time resolution is 1 ps
+
+==============================================
+       PROCESSOR BONUS FEATURES TESTS
+==============================================
+
+--- R-TYPE ---
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000003
+ALU input A    = 00000000
+ALU input B    = 00000003
+ALU result     = 00000003
+EX result      = 00000003
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000003
+WB write data  = 00000003
+========================================
+
+PASS:                              ADD expected=00000017 actual=00000017
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000003
+ALU input A    = 00000000
+ALU input B    = 00000003
+ALU result     = 00000003
+EX result      = 00000003
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000003
+WB write data  = 00000003
+========================================
+
+PASS:                              SUB expected=00000011 actual=00000011
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000003
+ALU input A    = 00000000
+ALU input B    = 00000003
+ALU result     = 00000003
+EX result      = 00000003
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000003
+WB write data  = 00000003
+========================================
+
+PASS:                              SLL expected=000000a0 actual=000000a0
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000014
+ALU input A    = 00000000
+ALU input B    = 00000014
+ALU result     = 00000014
+EX result      = 00000014
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000014
+WB write data  = 00000014
+========================================
+
+PASS:                              SLT expected=00000001 actual=00000001
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000014
+ALU input A    = 00000000
+ALU input B    = 00000014
+ALU result     = 00000014
+EX result      = 00000014
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000014
+WB write data  = 00000014
+========================================
+
+PASS:                             SLTU expected=00000001 actual=00000001
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 0000000f
+ALU input A    = 00000000
+ALU input B    = 0000000f
+ALU result     = 0000000f
+EX result      = 0000000f
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 0000000f
+WB write data  = 0000000f
+========================================
+
+PASS:                              XOR expected=0000005a actual=0000005a
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000002
+ALU input A    = 00000000
+ALU input B    = 00000002
+ALU result     = 00000002
+EX result      = 00000002
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000002
+WB write data  = 00000002
+========================================
+
+PASS:                              SRL expected=00000020 actual=00000020
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000002
+ALU input A    = 00000000
+ALU input B    = 00000002
+ALU result     = 00000002
+EX result      = 00000002
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000002
+WB write data  = 00000002
+========================================
+
+PASS:                              SRA expected=fffffffc actual=fffffffc
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 0000000f
+ALU input A    = 00000000
+ALU input B    = 0000000f
+ALU result     = 0000000f
+EX result      = 0000000f
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 0000000f
+WB write data  = 0000000f
+========================================
+
+PASS:                               OR expected=0000005f actual=0000005f
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 0000000f
+ALU input A    = 00000000
+ALU input B    = 0000000f
+ALU result     = 0000000f
+EX result      = 0000000f
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 0000000f
+WB write data  = 0000000f
+========================================
+
+PASS:                              AND expected=0000000a actual=0000000a
+
+--- I-TYPE ---
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             ADDI expected=00000007 actual=00000007
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             SLTI expected=00000001 actual=00000001
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                            SLTIU expected=00000001 actual=00000001
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             XORI expected=0000005a actual=0000005a
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                              ORI expected=0000005f actual=0000005f
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             ANDI expected=0000000a actual=0000000a
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             SLLI expected=0000000c actual=0000000c
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             SRLI expected=00000020 actual=00000020
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             SRAI expected=fffffffc actual=fffffffc
+
+--- LOADS ---
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                               LB expected=ffffff80 actual=ffffff80
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                               LH expected=ffff80ff actual=ffff80ff
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                               LW expected=80ff7f01 actual=80ff7f01
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                              LBU expected=00000080 actual=00000080
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                              LHU expected=000080ff actual=000080ff
+
+--- STORES ---
+
+===== X2 INITIALIZATION DEBUG =====
+Expected x2 value = 000000aa
+LUI instruction   = 00000137
+ADDI instruction  = 0aa10113
+===================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 000000aa
+ALU input A    = 00000000
+ALU input B    = 000000aa
+ALU result     = 000000aa
+EX result      = 000000aa
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 000000aa
+WB write data  = 000000aa
+========================================
+
+
+===== STORE DEBUG =====
+Address     = 00000081
+Word index  = 32
+Byte offset = 1
+funct3      = 000
+Write data  = 000000aa
+Operation   = SB
+=======================
+
+PASS:                               SB memory=80ffaa01
+
+===== X2 INITIALIZATION DEBUG =====
+Expected x2 value = 0000beef
+LUI instruction   = 0000c137
+ADDI instruction  = eef10113
+===================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 0000c000
+ALU input A    = 00000000
+ALU input B    = 0000c000
+ALU result     = 0000c000
+EX result      = 0000c000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 0000c000
+WB write data  = 0000c000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = fffffeef
+ALU input A    = 0000c000
+ALU input B    = fffffeef
+ALU result     = 0000beef
+EX result      = 0000beef
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 0000beef
+WB write data  = 0000beef
+========================================
+
+
+========== SH EX DEBUG ==========
+Source register rs2 =  2
+Register value      = 0000beef
+Forward B           = 00
+Forwarded value     = 0000beef
+Store address       = 00000082
+=================================
+
+
+===== STORE DEBUG =====
+Address     = 00000082
+Word index  = 32
+Byte offset = 2
+funct3      = 001
+Write data  = 0000beef
+Operation   = SH
+=======================
+
+PASS:                               SH memory=beef7f01
+
+===== X2 INITIALIZATION DEBUG =====
+Expected x2 value = 12345678
+LUI instruction   = 12345137
+ADDI instruction  = 67810113
+===================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 12345000
+ALU input A    = 00000000
+ALU input B    = 12345000
+ALU result     = 12345000
+EX result      = 12345000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 12345000
+WB write data  = 12345000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000678
+ALU input A    = 12345000
+ALU input B    = 00000678
+ALU result     = 12345678
+EX result      = 12345678
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 12345678
+WB write data  = 12345678
+========================================
+
+
+===== STORE DEBUG =====
+Address     = 00000080
+Word index  = 32
+Byte offset = 0
+funct3      = 010
+Write data  = 12345678
+Operation   = SW
+=======================
+
+PASS:                               SW memory=12345678
+
+--- BRANCHES ---
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000005
+ALU input A    = 00000000
+ALU input B    = 00000005
+ALU result     = 00000005
+EX result      = 00000005
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000005
+WB write data  = 00000005
+========================================
+
+PASS:                              BEQ branch taken
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000006
+ALU input A    = 00000000
+ALU input B    = 00000006
+ALU result     = 00000006
+EX result      = 00000006
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000006
+WB write data  = 00000006
+========================================
+
+PASS:                              BNE branch taken
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000001
+ALU input A    = 00000000
+ALU input B    = 00000001
+ALU result     = 00000001
+EX result      = 00000001
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000001
+WB write data  = 00000001
+========================================
+
+PASS:                              BLT branch taken
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = ffffffff
+ALU input A    = 00000000
+ALU input B    = ffffffff
+ALU result     = ffffffff
+EX result      = ffffffff
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = ffffffff
+WB write data  = ffffffff
+========================================
+
+PASS:                              BGE branch taken
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000002
+ALU input A    = 00000000
+ALU input B    = 00000002
+ALU result     = 00000002
+EX result      = 00000002
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000002
+WB write data  = 00000002
+========================================
+
+PASS:                             BLTU branch taken
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000001
+ALU input A    = 00000000
+ALU input B    = 00000001
+ALU result     = 00000001
+EX result      = 00000001
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000001
+WB write data  = 00000001
+========================================
+
+PASS:                             BGEU branch taken
+
+--- JUMPS ---
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                              JAL link=00000054
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                             JALR link=00000054
+
+--- UPPER IMMEDIATE ---
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                              LUI expected=12345000 actual=12345000
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                            AUIPC expected=12345050 actual=12345050
+
+--- SYSTEM / MISC ---
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                            ECALL reached following EBREAK
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS: EBREAK
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                            FENCE reached following EBREAK
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:                        FENCE.TSO reached following EBREAK
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 1
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+
+========== X2 EXECUTION DEBUG ==========
+ID_EX_Rd       =  2
+LUI control    = 0
+Immediate      = 00000000
+ALU input A    = 00000000
+ALU input B    = 00000000
+ALU result     = 00000000
+EX result      = 00000000
+========================================
+
+
+========== X2 WRITEBACK DEBUG ==========
+WB ALU result  = 00000000
+WB write data  = 00000000
+========================================
+
+PASS:        

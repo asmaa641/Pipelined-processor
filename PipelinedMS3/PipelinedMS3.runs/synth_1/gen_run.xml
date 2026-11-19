@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1795097808" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/Processor.dcp">
-  <File Type="PA-TCL" Name="Processor.tcl"/>
-  <File Type="RDS-PROPCONSTRS" Name="Processor_drc_synth.rpt"/>
-  <File Type="REPORTS-TCL" Name="Processor_reports.tcl"/>
-  <File Type="RDS-RDS" Name="Processor.vds"/>
-  <File Type="RDS-UTIL" Name="Processor_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="Processor_utilization_synth.pb"/>
-  <File Type="RDS-DCP" Name="Processor.dcp"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="Processor_timing_summary_synth.rpt"/>
-  <File Type="VDS-TIMING-PB" Name="Processor_timing_summary_synth.pb"/>
+<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1795102385" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/Processor.dcp">
+  <File Type="PA-TCL" Name="ProcessorBonusFeatures.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="ProcessorBonusFeatures_drc_synth.rpt"/>
+  <File Type="REPORTS-TCL" Name="ProcessorBonusFeatures_reports.tcl"/>
+  <File Type="RDS-RDS" Name="ProcessorBonusFeatures.vds"/>
+  <File Type="RDS-UTIL" Name="ProcessorBonusFeatures_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="ProcessorBonusFeatures_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="ProcessorBonusFeatures.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="ProcessorBonusFeatures_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="ProcessorBonusFeatures_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PPRDIR/../rtl/defines.v">
@@ -53,7 +53,7 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../rtl/SharedMemory.v">
+    <File Path="$PPRDIR/../rtl/SharedMemoryBonus5.v">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
@@ -95,6 +95,13 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PPRDIR/../rtl/mulDivUnit.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <File Path="$PPRDIR/../rtl/prv32_ALU.v">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
@@ -123,8 +130,24 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PPRDIR/../rtl/ProcessorBonusFeatures.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../rtl/SharedMemory.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <File Path="$PPRDIR/../rtl/processor.v">
       <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -154,34 +177,9 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../rtl/mulDivUnit.v">
-      <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="implementation"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
-    <File Path="$PPRDIR/../rtl/SharedMemoryBonus5.v">
-      <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="implementation"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
-    <File Path="$PSRCDIR/sources_1/new/ProcessorBonusFeatures.v">
-      <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="implementation"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="Processor"/>
-      <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="TopModule" Val="ProcessorBonusFeatures"/>
     </Config>
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">

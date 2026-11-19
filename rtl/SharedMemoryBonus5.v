@@ -163,6 +163,24 @@ always @(*) begin
         endcase
     end
 end
+always @(posedge clk) begin
+    if (!rst && data_grant && MemWrite) begin
+        $display("\n===== STORE DEBUG =====");
+        $display("Address     = %h", data_addr);
+        $display("Word index  = %d", word_index);
+        $display("Byte offset = %d", byte_offset);
+        $display("funct3      = %b", funct3);
+        $display("Write data  = %h", data_in);
 
+        case (funct3)
+            3'b000: $display("Operation   = SB");
+            3'b001: $display("Operation   = SH");
+            3'b010: $display("Operation   = SW");
+            default: $display("Operation   = UNKNOWN");
+        endcase
+
+        $display("=======================\n");
+    end
+end
 endmodule
 

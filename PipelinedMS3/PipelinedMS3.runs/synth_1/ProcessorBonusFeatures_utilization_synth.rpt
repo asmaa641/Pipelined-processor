@@ -1,14 +1,14 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
--------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2022.1 (win64) Build 3526262 Mon Apr 18 15:48:16 MDT 2022
-| Date         : Thu Nov 19 16:17:08 2026
+| Date         : Thu Nov 19 17:33:25 2026
 | Host         : CSE-P07-2168-X6 running 64-bit major release  (build 9200)
-| Command      : report_utilization -file Processor_utilization_synth.rpt -pb Processor_utilization_synth.pb
-| Design       : Processor
+| Command      : report_utilization -file ProcessorBonusFeatures_utilization_synth.rpt -pb ProcessorBonusFeatures_utilization_synth.pb
+| Design       : ProcessorBonusFeatures
 | Device       : xc7a100tcsg324-1
 | Speed File   : -1
 | Design State : Synthesized
--------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
 
 Utilization Design Information
 

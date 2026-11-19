@@ -100,7 +100,7 @@ ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_func
 rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
 
 // Hazard and flush control
-hazard_unit hazard_inst(.IFIDOpcode(IF_ID_Inst[`IR_opcode]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
+hazardUnit hazard_inst(.IFIDOpcode(IF_ID_Inst[`IR_opcode]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
 
 flushUnit flush_inst (.PCSel(PCSel), .stall(stall), .flushIFID(flushIFID), .bubbleIDEX(bubbleIDEX));
 
@@ -130,17 +130,71 @@ fourby1mux muxone (.in00(ID_EX_RegR1), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU
 fourby1mux muxtwo (.in00(ID_EX_RegR2), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardB), .out(ALU_input_B));
 
 // RV32M (Bonus 2)
+reg mdStarted;
+wire mdStart;
+
+assign mdStart = ID_EX_Control[14] && !mdStarted;
 assign mdStall = ID_EX_Control[14] && !mdReady;
 
-mulDivUnit mdu(.clk(clk), .rst(rst), .valid(ID_EX_Control[14]), .funct3(ID_EX_Func3[2:0]), .a(ALU_input_A), .b(ALU_input_B), .ready(mdReady), .result(mdResult));
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        mdStarted <= 1'b0;
+    else if (!ID_EX_Control[14] || mdReady)
+        mdStarted <= 1'b0;
+    else if (mdStart)
+        mdStarted <= 1'b1;
+end
 
-TwoBy1Mux EXResultMux(.A(ALUResult), .B(mdResult), .S(ID_EX_Control[14]), .C(EXResult));
+mulDivUnit mdu(.clk(clk), .rst(rst),
+    .valid(mdStart),
+    .funct3(ID_EX_Func3[2:0]),
+    .a(ALU_input_A),
+    .b(ALU_input_B),
+    .ready(mdReady),
+    .result(mdResult)
+);
+
+TwoBy1Mux EXResultMux(
+    .A(ALUResult),
+    .B(mdResult),
+    .S(ID_EX_Control[14]),
+    .C(EXResult)
+);
+// TEMPORARY DEBUGGING
+always @(posedge clk) begin
+
+    if (mdStart) begin
+        $display("\n========== MDU START ==========");
+        $display("Operation funct3 = %b", ID_EX_Func3[2:0]);
+        $display("Operand A        = %h", ALU_input_A);
+        $display("Operand B        = %h", ALU_input_B);
+        $display("Forward A        = %b", forwardA);
+        $display("Forward B        = %b", forwardB);
+        $display("Destination rd   = %d", ID_EX_Rd);
+    end
+
+    if (mdReady) begin
+        $display("========== MDU DONE ==========");
+        $display("MDU Result       = %h", mdResult);
+        $display("==============================\n");
+    end
+
+end
 
 
 // execute: 
 assign targetAddress = ID_EX_PC + ID_EX_Imm;
 // ALUinput1
-TwoBy1Mux ALUinput1mux(.A(ALU_input_A), .B(ID_EX_PC), .S(ID_EX_Control[6]), .C(ALUinput1));
+wire [31:0] ALUinput1Base;
+
+assign ALUinput1Base = ID_EX_Control[10] ? 32'b0 : ALU_input_A;
+
+TwoBy1Mux ALUinput1mux(
+    .A(ALUinput1Base),
+    .B(ID_EX_PC),
+    .S(ID_EX_Control[6]),
+    .C(ALUinput1)
+);
 // ALUinput2
 TwoBy1Mux ALUinput2mux(.A(ALU_input_B), .B(ID_EX_Imm), .S(ID_EX_Control[5]), .C(ALUinput2));
 // ALUControl
@@ -158,7 +212,7 @@ wire [2:0] EX_MEM_Func3;
 assign EX_MEM_Control_input = mdStall ? 5'b0 : {ID_EX_Control[9:7], ID_EX_Control[4:3]};
 
 // // EX/MEM holds its request until the memory completes it.
-Register #(.N(109)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,EXResult,ALU_input_B,ID_EX_Rd, ID_EX_Func3[2:0]}), .L(!memory_wait),.clk(clk),.rst(rst),
+Register #(.N(109)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,EXResult,ALU_input_B,ID_EX_Rd, ID_EX_Func3[2:0]}), .L(!memory_wait && (!mdStall)),.clk(clk),.rst(rst),
                               .Q({EX_MEM_Control,EX_MEM_PCPlus4,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd, EX_MEM_Func3}));
 
 // Memory access: 
@@ -190,11 +244,38 @@ TwoBy1Mux pc4OrtargetAddressorJal(.A(pc4OrtargetAddressOutput), .B(jalRTarget), 
 
 BranchUnit branchU(.branch(ID_EX_Control[13]),.jal(ID_EX_Control[12]), .jalr(ID_EX_Control[11]), .funct3(ID_EX_Func3[2:0]), .cf(cf),.zf(zf),.vf(vf), .sf(sf),.PCSel(PCSel));
 
+// SH DEBUG - inspect the instruction in the EX stage
+always @(posedge clk) begin
+    if (!rst && ID_EX_Control[8] && ID_EX_Func3[2:0] == 3'b001) begin
+        $display("\n========== SH EX DEBUG ==========");
+        $display("Source register rs2 = %d", ID_EX_Rs2);
+        $display("Register value      = %h", ID_EX_RegR2);
+        $display("Forward B           = %b", forwardB);
+        $display("Forwarded value     = %h", ALU_input_B);
+        $display("Store address       = %h", ALUResult);
+        $display("=================================\n");
+    end
+end
+// DEBUG: Track instructions writing to x2
+always @(posedge clk) begin
+    if (!rst && ID_EX_Rd == 5'd2 && ID_EX_Control[7]) begin
+        $display("\n========== X2 EXECUTION DEBUG ==========");
+        $display("ID_EX_Rd       = %d", ID_EX_Rd);
+        $display("LUI control    = %b", ID_EX_Control[10]);
+        $display("Immediate      = %h", ID_EX_Imm);
+        $display("ALU input A    = %h", ALUinput1);
+        $display("ALU input B    = %h", ALUinput2);
+        $display("ALU result     = %h", ALUResult);
+        $display("EX result      = %h", EXResult);
+        $display("========================================\n");
+    end
 
-
-
+    if (!rst && MEM_WB_rd == 5'd2 && MEM_WB_Control[2]) begin
+        $display("\n========== X2 WRITEBACK DEBUG ==========");
+        $display("WB ALU result  = %h", MEM_WB_ALUout);
+        $display("WB write data  = %h", MEM_WB_WriteData);
+        $display("========================================\n");
+    end
+end
 
 endmodule
-
-
-

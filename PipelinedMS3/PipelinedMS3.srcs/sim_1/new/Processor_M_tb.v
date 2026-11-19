@@ -1,161 +1,181 @@
 
+`timescale 1ns / 1ps
 
-// RV32M test for ProcessorBonusFeatures (stall-on-conflict top).
-// Programs are real instructions (no force), M ops run ~34 clocks each.
-
-module Processor_M_tb;
+module mulDivUnit_tb;
 
     reg clk;
     reg rst;
+    reg valid;
+    reg [2:0] funct3;
+    reg [31:0] a;
+    reg [31:0] b;
 
-    integer pass_count = 0;
-    integer fail_count = 0;
-    integer i;
+    wire ready;
+    wire [31:0] result;
 
-    ProcessorBonusFeatures DUT (.clk(clk), .rst(rst));
+    integer pass_count;
+    integer fail_count;
 
+    // DUT
+    mulDivUnit DUT (
+        .clk(clk),
+        .rst(rst),
+        .valid(valid),
+        .funct3(funct3),
+        .a(a),
+        .b(b),
+        .ready(ready),
+        .result(result)
+    );
+
+    // Clock generation
     initial begin
         clk = 0;
         forever #5 clk = ~clk;
     end
 
-    localparam [31:0] NOP = 32'h00000013;
+    // Test task
+    task run_test;
+        input [8*40-1:0] test_name;
+        input [2:0] operation;
+        input [31:0] operand_a;
+        input [31:0] operand_b;
+        input [31:0] expected;
 
-    // M funct3 codes
-    localparam [2:0] F_MUL = 3'b000, F_MULH = 3'b001, F_MULHSU = 3'b010, F_MULHU = 3'b011,
-                     F_DIV = 3'b100, F_DIVU = 3'b101, F_REM = 3'b110, F_REMU = 3'b111;
+        integer timeout;
 
-    function [31:0] i_addi(input [4:0] rd, input [4:0] rs1, input [11:0] imm);
-        i_addi = {imm, rs1, 3'b000, rd, 7'h13};
-    endfunction
-
-    function [31:0] i_add(input [4:0] rd, input [4:0] rs1, input [4:0] rs2);
-        i_add = {7'b0000000, rs2, rs1, 3'b000, rd, 7'h33};
-    endfunction
-
-    function [31:0] i_lui(input [4:0] rd, input [19:0] imm);
-        i_lui = {imm, rd, 7'h37};
-    endfunction
-
-    // RV32M: opcode OP, funct7 = 0000001
-    function [31:0] i_m(input [2:0] f3, input [4:0] rd, input [4:0] rs1, input [4:0] rs2);
-        i_m = {7'b0000001, rs2, rs1, f3, rd, 7'h33};
-    endfunction
-
-    task clear_memory;
-    begin
-        for (i = 0; i < 64; i = i + 1)
-            DUT.SharedMem.mem[i] = NOP;
-    end
-    endtask
-
-    task run_program;
-        input integer clocks;
-        integer j;
-    begin
-        rst = 1;
-        repeat (2) @(negedge clk);
-        rst = 0;
-        for (j = 0; j < clocks; j = j + 1)
+        begin
+            // Apply inputs
             @(negedge clk);
-    end
-    endtask
+            funct3 = operation;
+            a = operand_a;
+            b = operand_b;
+            valid = 1'b1;
 
-    task check_reg;
-        input [4:0] r;
-        input [31:0] exp;
-        input [8*24-1:0] nm;
-    begin
-        if (DUT.register.q[r] === exp) begin
-            $display("PASS %0s  x%0d=%h", nm, r, DUT.register.q[r]);
-            pass_count = pass_count + 1;
-        end else begin
-            $display("FAIL %0s  x%0d expected=%h actual=%h", nm, r, exp, DUT.register.q[r]);
-            fail_count = fail_count + 1;
+            // Send one-cycle valid pulse
+            @(negedge clk);
+            valid = 1'b0;
+
+            // Wait for MDU to finish
+            timeout = 0;
+
+            while (ready !== 1'b1 && timeout < 40) begin
+                @(negedge clk);
+                timeout = timeout + 1;
+            end
+
+            // DEBUG OUTPUT
+            $display(
+                "DEBUG: op=%b a=%h b=%h result=%h ready=%b",
+                operation, operand_a, operand_b, result, ready
+            );
+
+            // Check result
+            if (timeout >= 40) begin
+                $display("FAIL: %0s - TIMEOUT", test_name);
+                fail_count = fail_count + 1;
+            end
+            else if (result !== expected) begin
+                $display(
+                    "FAIL: %0s | A=%h B=%h | Expected=%h Got=%h",
+                    test_name, operand_a, operand_b, expected, result
+                );
+                fail_count = fail_count + 1;
+            end
+            else begin
+                $display("PASS: %0s | Result=%h", test_name, result);
+                pass_count = pass_count + 1;
+            end
+
+            @(negedge clk);
         end
-    end
     endtask
 
-    // x1 = a, x2 = b, x3 = x1 (op) x2
-    task m_test;
-        input [11:0] a;
-        input [11:0] b;
-        input [2:0]  f3;
-        input [31:0] exp;
-        input [8*24-1:0] nm;
-    begin
-        clear_memory();
-        DUT.SharedMem.mem[0] = i_addi(1, 0, a);
-        DUT.SharedMem.mem[1] = i_addi(2, 0, b);
-        DUT.SharedMem.mem[2] = i_m(f3, 3, 1, 2);
-        run_program(120);
-        check_reg(3, exp, nm);
-    end
-    endtask
-
+    // Main test sequence
     initial begin
-        rst = 1;
-        clear_memory();
+        rst = 1'b1;
+        valid = 1'b0;
+        funct3 = 3'b000;
+        a = 32'd0;
+        b = 32'd0;
 
-        // ---------------- all 8 ops, x1 = -7, x2 = 2 ----------------
-        m_test(-7, 2, F_MUL,    32'hFFFFFFF2, "MUL   -7*2");        // -14
-        m_test(-7, 2, F_MULH,   32'hFFFFFFFF, "MULH  -7*2");        // high of -14
-        m_test(-7, 2, F_MULHSU, 32'hFFFFFFFF, "MULHSU -7*2u");      // high of -14
-        m_test(-7, 2, F_MULHU,  32'h00000001, "MULHU 0xFFFFFFF9*2");
-        m_test(-7, 2, F_DIV,    32'hFFFFFFFD, "DIV   -7/2");        // -3
-        m_test(-7, 2, F_DIVU,   32'h7FFFFFFC, "DIVU  0xFFFFFFF9/2");
-        m_test(-7, 2, F_REM,    32'hFFFFFFFF, "REM   -7%2");        // -1
-        m_test(-7, 2, F_REMU,   32'h00000001, "REMU  0xFFFFFFF9%2");
+        pass_count = 0;
+        fail_count = 0;
 
-        // ---------------- divide by zero (x2 = 0) ----------------
-        m_test(-7, 0, F_DIV,  32'hFFFFFFFF, "DIV  by 0");
-        m_test(-7, 0, F_DIVU, 32'hFFFFFFFF, "DIVU by 0");
-        m_test(-7, 0, F_REM,  32'hFFFFFFF9, "REM  by 0");
-        m_test(-7, 0, F_REMU, 32'hFFFFFFF9, "REMU by 0");
+        repeat (3) @(negedge clk);
+        rst = 1'b0;
 
-        // ---------------- overflow: 0x80000000 / -1 ----------------
-        clear_memory();
-        DUT.SharedMem.mem[0] = i_lui (1, 20'h80000);
-        DUT.SharedMem.mem[1] = i_addi(2, 0, -1);
-        DUT.SharedMem.mem[2] = i_m(F_DIV, 3, 1, 2);
-        DUT.SharedMem.mem[3] = i_m(F_REM, 4, 1, 2);
-        run_program(200);
-        check_reg(3, 32'h80000000, "DIV overflow");
-        check_reg(4, 32'h00000000, "REM overflow");
+        repeat (2) @(negedge clk);
 
-        // ---------------- M result used by the very next instruction ----------------
-        clear_memory();
-        DUT.SharedMem.mem[0] = i_addi(1, 0, 6);
-        DUT.SharedMem.mem[1] = i_addi(2, 0, 7);
-        DUT.SharedMem.mem[2] = i_m(F_MUL, 3, 1, 2);   // 42
-        DUT.SharedMem.mem[3] = i_add(4, 3, 3);        // 84 (forwarded M result)
-        run_program(150);
-        check_reg(3, 32'd42, "MUL then use");
-        check_reg(4, 32'd84, "dependent add");
+        $display("\n======================================");
+        $display("       MUL/DIV UNIT TESTBENCH");
+        $display("======================================\n");
 
-        // ---------------- back-to-back M instructions ----------------
-        clear_memory();
-        DUT.SharedMem.mem[0] = i_addi(1, 0, 20);
-        DUT.SharedMem.mem[1] = i_addi(2, 0, 6);
-        DUT.SharedMem.mem[2] = i_m(F_MUL, 3, 1, 2);   // 120
-        DUT.SharedMem.mem[3] = i_m(F_DIV, 4, 1, 2);   // 3
-        DUT.SharedMem.mem[4] = i_m(F_REM, 5, 1, 2);   // 2
-        DUT.SharedMem.mem[5] = i_addi(6, 0, 99);      // runs after all three
-        run_program(250);
-        check_reg(3, 32'd120, "B2B MUL");
-        check_reg(4, 32'd3,   "B2B DIV");
-        check_reg(5, 32'd2,   "B2B REM");
-        check_reg(6, 32'd99,  "after M ops");
+        // Multiplication tests
+        run_test("MUL",          3'b000, 32'd6, 32'd7, 32'd42);
+        run_test("MULH",         3'b001, -32'd7, 32'd2, 32'hFFFFFFFF);
+        run_test("MULHSU",       3'b010, -32'd7, 32'd2, 32'hFFFFFFFF);
+        run_test("MULHU",        3'b011, 32'hFFFFFFFF, 32'd2, 32'h00000001);
+        run_test("MUL negative", 3'b000, -32'd7, 32'd2, 32'hFFFFFFF2);
 
-        $display("\n================================");
-        $display("RV32M TEST SUMMARY");
-        $display("PASS: %0d", pass_count);
-        $display("FAIL: %0d", fail_count);
-        $display("================================");
-        if (fail_count == 0) $display("ALL TESTS PASSED");
-        else                 $display("SOME TESTS FAILED");
+        // Division and remainder tests
+        run_test("DIV",  3'b100, -32'd7, 32'd2, 32'hFFFFFFFD);
+        run_test("DIVU", 3'b101, -32'd7, 32'd2, 32'h7FFFFFFC);
+        run_test("REM",  3'b110, -32'd7, 32'd2, 32'hFFFFFFFF);
+        run_test("REMU", 3'b111, -32'd7, 32'd2, 32'h00000001);
+
+        // Division by zero
+        run_test("DIV by zero",  3'b100, 32'd25, 32'd0, 32'hFFFFFFFF);
+        run_test("DIVU by zero", 3'b101, 32'd25, 32'd0, 32'hFFFFFFFF);
+        run_test("REM by zero",  3'b110, 32'd25, 32'd0, 32'd25);
+        run_test("REMU by zero", 3'b111, 32'd25, 32'd0, 32'd25);
+
+        // Signed overflow
+        run_test("DIV signed overflow",
+                 3'b100, 32'h80000000, 32'hFFFFFFFF, 32'h80000000);
+
+        run_test("REM signed overflow",
+                 3'b110, 32'h80000000, 32'hFFFFFFFF, 32'h00000000);
+
+        // Signed division and remainder
+        run_test("DIV positive result",
+                 3'b100, -32'd12, -32'd3, 32'd4);
+
+        run_test("DIV negative divisor",
+                 3'b100, 32'd12, -32'd5, 32'hFFFFFFFE);
+
+        run_test("REM negative dividend",
+                 3'b110, -32'd13, 32'd5, 32'hFFFFFFFE);
+
+        run_test("REM negative divisor",
+                 3'b110, 32'd13, -32'd5, 32'd3);
+
+        // Back-to-back operations
+        run_test("Back-to-back MUL",
+                 3'b000, 32'd10, 32'd12, 32'd120);
+
+        run_test("Back-to-back DIV",
+                 3'b100, 32'd10, 32'd3, 32'd3);
+
+        run_test("Back-to-back REM",
+                 3'b110, 32'd10, 32'd3, 32'd1);
+
+        // Summary
+        $display("\n======================================");
+        $display("             TEST SUMMARY");
+        $display("======================================");
+
+        $display("Passed: %0d", pass_count);
+        $display("Failed: %0d", fail_count);
+
+        if (fail_count == 0)
+            $display("\nALL TESTS PASSED!");
+        else
+            $display("\nSOME TESTS FAILED!");
+
+        $display("======================================\n");
+
         $finish;
     end
 
 endmodule
-

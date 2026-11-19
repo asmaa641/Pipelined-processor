@@ -2,12 +2,12 @@
 # Vivado v2022.1 (64-bit)
 # SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
 # IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
-# Start of session at: Thu Nov 19 16:16:49 2026
-# Process ID: 1592
+# Start of session at: Thu Nov 19 17:33:06 2026
+# Process ID: 19960
 # Current directory: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1
-# Command line: vivado.exe -log Processor.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Processor.tcl
-# Log file: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/Processor.vds
+# Command line: vivado.exe -log ProcessorBonusFeatures.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ProcessorBonusFeatures.tcl
+# Log file: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/ProcessorBonusFeatures.vds
 # Journal file: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1\vivado.jou
 # Running On: CSE-P07-2168-X6, OS: Windows, CPU Frequency: 2112 MHz, CPU Physical cores: 20, Host memory: 68391 MB
 #-----------------------------------------------------------
-source Processor.tcl -notrace
+source ProcessorBonusFeatures.tcl -notrace

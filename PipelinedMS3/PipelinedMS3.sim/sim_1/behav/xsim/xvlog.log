@@ -1,0 +1,42 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ALUControl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ALUControl
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/DFlipFlop.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module DFlipFlop
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ForwardingUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module forwardingUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ProcessorBonusFeatures
+WARNING: [VRFC 10-2938] 'ID_EX_Rd' is already implicitly declared on line 103 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:110]
+WARNING: [VRFC 10-2938] 'EX_MEM_ALU_Out' is already implicitly declared on line 129 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:207]
+WARNING: [VRFC 10-2938] 'EX_MEM_rd' is already implicitly declared on line 128 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:209]
+WARNING: [VRFC 10-2938] 'MEM_WB_rd' is already implicitly declared on line 97 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:225]
+WARNING: [VRFC 10-2938] 'MEM_WB_WriteData' is already implicitly declared on line 97 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:231]
+WARNING: [VRFC 10-3380] identifier 'EX_MEM_Control' is used before its declaration [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:39]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/RegFile.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module RegFile
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Register
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemoryBonus5.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module SharedMemoryBonus5
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/BranchUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module BranchUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/controlUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ControlUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/flushUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module flushUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/fourby1mux.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fourby1mux
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/hazardUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module hazardUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/mulDivUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mulDivUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/prv32_ALU.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module prv32_ALU
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/rv32_ImmGen.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module rv32_ImmGen
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/shifter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shifter
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/twoby1mux.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module TwoBy1Mux
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/asmaaelshabshiri/Downloads/ProcessorBonusFeatures_tb_fixed.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ProcessorBonusFeatures_tb

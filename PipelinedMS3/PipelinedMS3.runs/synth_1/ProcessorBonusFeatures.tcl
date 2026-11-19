@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/Processor.tcl"
+  variable script "C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/ProcessorBonusFeatures.tcl"
   variable category "vivado_synth"
 }
 
@@ -92,17 +92,18 @@ read_verilog -library xil_defaultlib {
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ForwardingUnit.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/RegFile.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v
-  C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemory.v
+  C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemoryBonus5.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/branchUnit.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/controlUnit.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/flushUnit.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/fourby1mux.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/hazardUnit.v
+  C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/mulDivUnit.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/prv32_ALU.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/rv32_ImmGen.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/shifter.v
   C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/twoby1mux.v
-  C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v
+  C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -119,7 +120,7 @@ read_checkpoint -auto_incremental -incremental C:/Users/asmaaelshabshiri/Documen
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }
-synth_design -top Processor -part xc7a100tcsg324-1
+synth_design -top ProcessorBonusFeatures -part xc7a100tcsg324-1
 OPTRACE "synth_design" END { }
 if { [get_msg_config -count -severity {CRITICAL WARNING}] > 0 } {
  send_msg_id runtcl-6 info "Synthesis results are not added to the cache due to CRITICAL_WARNING"
@@ -129,10 +130,10 @@ if { [get_msg_config -count -severity {CRITICAL WARNING}] > 0 } {
 OPTRACE "write_checkpoint" START { CHECKPOINT }
 # disable binary constraint mode for synth run checkpoints
 set_param constraints.enableBinaryConstraints false
-write_checkpoint -force -noxdef Processor.dcp
+write_checkpoint -force -noxdef ProcessorBonusFeatures.dcp
 OPTRACE "write_checkpoint" END { }
 OPTRACE "synth reports" START { REPORT }
-create_report "synth_1_synth_report_utilization_0" "report_utilization -file Processor_utilization_synth.rpt -pb Processor_utilization_synth.pb"
+create_report "synth_1_synth_report_utilization_0" "report_utilization -file ProcessorBonusFeatures_utilization_synth.rpt -pb ProcessorBonusFeatures_utilization_synth.pb"
 OPTRACE "synth reports" END { }
 file delete __synthesis_is_running__
 close [open __synthesis_is_complete__ w]

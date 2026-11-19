@@ -12,11 +12,12 @@ verilog xil_defaultlib  \
 "../../../../../rtl/flushUnit.v" \
 "../../../../../rtl/fourby1mux.v" \
 "../../../../../rtl/hazardUnit.v" \
+"../../../../../rtl/mulDivUnit.v" \
 "../../../../../rtl/prv32_ALU.v" \
 "../../../../../rtl/rv32_ImmGen.v" \
 "../../../../../rtl/shifter.v" \
 "../../../../../rtl/twoby1mux.v" \
-"../../../../PipelinedMS3.srcs/sim_1/new/Processor_M_tb.v" \
+"../../../../../../../../Downloads/ProcessorBonusFeatures_tb_fixed.v" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

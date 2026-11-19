@@ -2,36 +2,36 @@
 # Vivado v2022.1 (64-bit)
 # SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
 # IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
-# Start of session at: Thu Nov 19 16:16:49 2026
-# Process ID: 1592
+# Start of session at: Thu Nov 19 17:33:06 2026
+# Process ID: 19960
 # Current directory: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1
-# Command line: vivado.exe -log Processor.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Processor.tcl
-# Log file: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/Processor.vds
+# Command line: vivado.exe -log ProcessorBonusFeatures.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ProcessorBonusFeatures.tcl
+# Log file: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/ProcessorBonusFeatures.vds
 # Journal file: C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1\vivado.jou
 # Running On: CSE-P07-2168-X6, OS: Windows, CPU Frequency: 2112 MHz, CPU Physical cores: 20, Host memory: 68391 MB
 #-----------------------------------------------------------
-source Processor.tcl -notrace
+source ProcessorBonusFeatures.tcl -notrace
 Command: read_checkpoint -auto_incremental -incremental C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.srcs/utils_1/imports/synth_1/Processor.dcp
 INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.srcs/utils_1/imports/synth_1/Processor.dcp for incremental synthesis
 INFO: [Vivado 12-7989] Please ensure there are no constraint changes
-Command: synth_design -top Processor -part xc7a100tcsg324-1
+Command: synth_design -top ProcessorBonusFeatures -part xc7a100tcsg324-1
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
-INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
-INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 21492
-WARNING: [Synth 8-8895] 'ID_EX_Rd' is already implicitly declared on line 92 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:99]
-WARNING: [Synth 8-8895] 'EX_MEM_ALU_Out' is already implicitly declared on line 116 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:132]
-WARNING: [Synth 8-8895] 'EX_MEM_rd' is already implicitly declared on line 115 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:134]
-WARNING: [Synth 8-8895] 'MEM_WB_rd' is already implicitly declared on line 86 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:148]
-WARNING: [Synth 8-8895] 'MEM_WB_WriteData' is already implicitly declared on line 86 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:153]
+INFO: [Synth 8-7075] Helper process launched with PID 18012
+WARNING: [Synth 8-8895] 'ID_EX_Rd' is already implicitly declared on line 103 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:110]
+WARNING: [Synth 8-8895] 'EX_MEM_ALU_Out' is already implicitly declared on line 129 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:198]
+WARNING: [Synth 8-8895] 'EX_MEM_rd' is already implicitly declared on line 128 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:200]
+WARNING: [Synth 8-8895] 'MEM_WB_rd' is already implicitly declared on line 97 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:216]
+WARNING: [Synth 8-8895] 'MEM_WB_WriteData' is already implicitly declared on line 97 [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:222]
+WARNING: [Synth 8-6901] identifier 'EX_MEM_Control' is used before its declaration [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:39]
+WARNING: [Synth 8-6901] identifier 'EX_MEM_Control' is used before its declaration [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:39]
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-6157] synthesizing module 'Processor' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:15]
+INFO: [Synth 8-6157] synthesizing module 'ProcessorBonusFeatures' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:16]
 INFO: [Synth 8-6157] synthesizing module 'Register' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
 	Parameter N bound to: 64 - type: integer 
 INFO: [Synth 8-6157] synthesizing module 'TwoBy1Mux' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/twoby1mux.v:14]
@@ -105,9 +105,6 @@ WARNING: [Synth 8-689] width (1) of port connection 'C' does not match port widt
 INFO: [Synth 8-6155] done synthesizing module 'Register' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
 INFO: [Synth 8-6157] synthesizing module 'ControlUnit' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/controlUnit.v:16]
 INFO: [Synth 8-6155] done synthesizing module 'ControlUnit' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/controlUnit.v:16]
-WARNING: [Synth 8-7071] port 'inst25' of module 'ControlUnit' is unconnected for instance 'control' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:81]
-WARNING: [Synth 8-7071] port 'mulDiv' of module 'ControlUnit' is unconnected for instance 'control' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:81]
-WARNING: [Synth 8-7023] instance 'control' of module 'ControlUnit' has 17 connections declared, but only 15 given [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:81]
 INFO: [Synth 8-6157] synthesizing module 'RegFile' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/RegFile.v:2]
 INFO: [Synth 8-6157] synthesizing module 'Register__parameterized0' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
 WARNING: [Synth 8-689] width (1) of port connection 'C' does not match port width (32) of module 'TwoBy1Mux' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:32]
@@ -152,7 +149,7 @@ INFO: [Synth 8-6157] synthesizing module 'flushUnit' [C:/Users/asmaaelshabshiri/
 WARNING: [Synth 8-6104] Input port 'flushIFID' has an internal driver [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/flushUnit.v:27]
 INFO: [Synth 8-6155] done synthesizing module 'flushUnit' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/flushUnit.v:19]
 INFO: [Synth 8-6157] synthesizing module 'Register__parameterized1' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
-	Parameter N bound to: 161 - type: integer 
+	Parameter N bound to: 162 - type: integer 
 WARNING: [Synth 8-689] width (1) of port connection 'C' does not match port width (32) of module 'TwoBy1Mux' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:32]
 WARNING: [Synth 8-689] width (1) of port connection 'C' does not match port width (32) of module 'TwoBy1Mux' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:32]
 WARNING: [Synth 8-689] width (1) of port connection 'C' does not match port width (32) of module 'TwoBy1Mux' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:32]
@@ -164,6 +161,8 @@ INFO: [Synth 8-6155] done synthesizing module 'forwardingUnit' (0#1) [C:/Users/a
 INFO: [Synth 8-6157] synthesizing module 'fourby1mux' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/fourby1mux.v:1]
 INFO: [Synth 8-226] default block is never used [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/fourby1mux.v:10]
 INFO: [Synth 8-6155] done synthesizing module 'fourby1mux' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/fourby1mux.v:1]
+INFO: [Synth 8-6157] synthesizing module 'mulDivUnit' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/mulDivUnit.v:18]
+INFO: [Synth 8-6155] done synthesizing module 'mulDivUnit' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/mulDivUnit.v:18]
 INFO: [Synth 8-6157] synthesizing module 'ALUControl' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ALUControl.v:15]
 INFO: [Synth 8-226] default block is never used [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ALUControl.v:28]
 INFO: [Synth 8-6155] done synthesizing module 'ALUControl' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ALUControl.v:15]
@@ -175,120 +174,158 @@ INFO: [Synth 8-6155] done synthesizing module 'prv32_ALU' (0#1) [C:/Users/asmaae
 INFO: [Synth 8-6157] synthesizing module 'Register__parameterized2' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
 	Parameter N bound to: 109 - type: integer 
 INFO: [Synth 8-6155] done synthesizing module 'Register__parameterized2' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
-INFO: [Synth 8-6157] synthesizing module 'SharedMemory' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemory.v:2]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemory.v:66]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemory.v:81]
-INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemory.v:56]
-INFO: [Synth 8-6155] done synthesizing module 'SharedMemory' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemory.v:2]
+INFO: [Synth 8-6157] synthesizing module 'SharedMemoryBonus5' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemoryBonus5.v:15]
+INFO: [Synth 8-6155] done synthesizing module 'SharedMemoryBonus5' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/SharedMemoryBonus5.v:15]
 INFO: [Synth 8-6157] synthesizing module 'Register__parameterized3' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
 	Parameter N bound to: 104 - type: integer 
 INFO: [Synth 8-6155] done synthesizing module 'Register__parameterized3' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/Register.v:13]
 INFO: [Synth 8-6157] synthesizing module 'BranchUnit' [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/branchUnit.v:15]
 INFO: [Synth 8-6155] done synthesizing module 'BranchUnit' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/branchUnit.v:15]
-INFO: [Synth 8-6155] done synthesizing module 'Processor' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:15]
-WARNING: [Synth 8-3848] Net flushIFID in module/entity Processor does not have driver. [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/processor.v:42]
-WARNING: [Synth 8-7129] Port inst_addr[31] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[30] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[29] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[28] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[27] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[26] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[25] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[24] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[23] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[22] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[21] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[20] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[19] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[18] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[17] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[16] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[15] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[14] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[13] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[12] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[11] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[10] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[9] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port inst_addr[8] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[31] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[30] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[29] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[28] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[27] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[26] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[25] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[24] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[23] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[22] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[21] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[20] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[19] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[18] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[17] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[16] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[15] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[14] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[13] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[12] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[11] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[10] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[9] in module SharedMemory is either unconnected or has no load
-WARNING: [Synth 8-7129] Port data_addr[8] in module SharedMemory is either unconnected or has no load
+INFO: [Synth 8-6155] done synthesizing module 'ProcessorBonusFeatures' (0#1) [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:16]
+WARNING: [Synth 8-3848] Net flushIFID in module/entity ProcessorBonusFeatures does not have driver. [C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/rtl/ProcessorBonusFeatures.v:21]
+WARNING: [Synth 8-7129] Port inst_addr[31] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[30] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[29] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[28] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[27] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[26] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[25] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[24] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[23] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[22] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[21] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[20] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[19] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[18] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[17] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[16] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[15] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[14] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[13] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[12] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[11] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[10] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[9] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port inst_addr[8] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[31] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[30] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[29] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[28] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[27] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[26] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[25] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[24] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[23] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[22] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[21] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[20] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[19] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[18] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[17] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[16] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[15] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[14] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[13] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[12] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[11] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[10] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[9] in module SharedMemoryBonus5 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port data_addr[8] in module SharedMemoryBonus5 is either unconnected or has no load
 WARNING: [Synth 8-7129] Port IR[1] in module rv32_ImmGen is either unconnected or has no load
 WARNING: [Synth 8-7129] Port IR[0] in module rv32_ImmGen is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a100tcsg324-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 INFO: [Device 21-403] Loading part xc7a100tcsg324-1
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Start Preparing Guide Design
 ---------------------------------------------------------------------------------
+CRITICAL WARNING: [Synth 8-6895] The reference checkpoint C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.srcs/utils_1/imports/synth_1/Processor.dcp is not suitable for use with incremental synthesis for this design. Please regenerate the checkpoint for this design with -incremental_synth switch in the same Vivado session that synth_design has been run. Synthesis will continue with the default flow
+---------------------------------------------------------------------------------
+Finished Doing Graph Differ : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1297.957 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Preparing Guide Design : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1297.957 ; gain = 0.000
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'mulDivUnit'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                 ST_IDLE |                              001 |                               00
+                  ST_RUN |                              010 |                               01
+                 ST_DONE |                              100 |                               10
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'one-hot' in module 'mulDivUnit'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1297.957 ; gain = 0.000
+---------------------------------------------------------------------------------
+
+
+Incremental Synthesis Report Summary:
+
+1. Incremental synthesis run: no
+
+   Reason for not running incremental synthesis : 
+
+
+INFO: [Synth 8-7130] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 No constraint files found.
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
 +---Adders : 
+	   2 Input   64 Bit       Adders := 2     
 	   3 Input   33 Bit       Adders := 1     
-	   2 Input   32 Bit       Adders := 3     
+	   2 Input   32 Bit       Adders := 7     
+	   3 Input   32 Bit       Adders := 1     
+	   2 Input    6 Bit       Adders := 1     
 +---XORs : 
 	   2 Input     32 Bit         XORs := 1     
+	   2 Input      1 Bit         XORs := 1     
 	   4 Input      1 Bit         XORs := 1     
 +---Registers : 
-	                1 Bit    Registers := 1495  
+	               64 Bit    Registers := 2     
+	               32 Bit    Registers := 5     
+	                6 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 1500  
 +---RAMs : 
 	               2K Bit	(64 X 32 bit)          RAMs := 1     
 +---Muxes : 
-	   2 Input   64 Bit        Muxes := 1     
-	   2 Input   32 Bit        Muxes := 1505  
+	   3 Input   64 Bit        Muxes := 2     
+	   2 Input   64 Bit        Muxes := 2     
+	   2 Input   32 Bit        Muxes := 1513  
 	   8 Input   32 Bit        Muxes := 1     
 	   4 Input   32 Bit        Muxes := 6     
-	   3 Input   32 Bit        Muxes := 2     
+	   3 Input   32 Bit        Muxes := 5     
 	   6 Input   32 Bit        Muxes := 1     
 	   3 Input   16 Bit        Muxes := 1     
-	   2 Input   14 Bit        Muxes := 1     
+	   2 Input   15 Bit        Muxes := 1     
 	   2 Input    8 Bit        Muxes := 1     
 	   4 Input    8 Bit        Muxes := 1     
+	   3 Input    6 Bit        Muxes := 1     
+	   2 Input    5 Bit        Muxes := 1     
 	   9 Input    4 Bit        Muxes := 1     
 	   5 Input    4 Bit        Muxes := 1     
 	   2 Input    4 Bit        Muxes := 1     
 	  11 Input    2 Bit        Muxes := 2     
 	   2 Input    2 Bit        Muxes := 3     
 	  11 Input    1 Bit        Muxes := 11    
-	   3 Input    1 Bit        Muxes := 2     
+	   3 Input    1 Bit        Muxes := 9     
+	   2 Input    1 Bit        Muxes := 4     
+	   4 Input    1 Bit        Muxes := 2     
 	   6 Input    1 Bit        Muxes := 1     
-	   2 Input    1 Bit        Muxes := 1     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -307,20 +344,20 @@ Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 No constraint files found.
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Timing Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Technology Mapping : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -338,37 +375,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished IO Insertion : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -393,24 +430,25 @@ Report Instance Areas:
 |1     |top      |       |     0|
 +------+---------+-------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 531 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
-Synthesis Optimization Complete : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Synthesis finished with 0 errors, 1 critical warnings and 531 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
+Synthesis Optimization Complete : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1297.957 ; gain = 0.000
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1297.957 ; gain = 0.000
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1299.230 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1297.957 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Synth Design complete, checksum: 6045093
+Synth Design complete, checksum: 95d5bf43
 INFO: [Common 17-83] Releasing license: Synthesis
-61 Infos, 161 Warnings, 0 Critical Warnings and 0 Errors encountered.
+61 Infos, 160 Warnings, 1 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1299.230 ; gain = 0.000
-INFO: [Common 17-1381] The checkpoint 'C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/Processor.dcp' has been generated.
-INFO: [runtcl-4] Executing : report_utilization -file Processor_utilization_synth.rpt -pb Processor_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Thu Nov 19 16:17:08 2026...
+synth_design: Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1297.957 ; gain = 0.000
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+INFO: [Common 17-1381] The checkpoint 'C:/Users/asmaaelshabshiri/Documents/GitHub/Pipelined-processor/PipelinedMS3/PipelinedMS3.runs/synth_1/ProcessorBonusFeatures.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file ProcessorBonusFeatures_utilization_synth.rpt -pb ProcessorBonusFeatures_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 19 17:33:25 2026...
