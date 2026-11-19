@@ -2,12 +2,13 @@
 *
 * Module: Processor
 * Project: RISCV Processor
-* Author: Asmaa Elshabshiri
-* Emails: asmaaelshabshiri@aucegypt.edu
+* Author: Asmaa Elshabshiri, Janna Alfiky
+* Emails: asmaaelshabshiri@aucegypt.edu, jannabassem@aucegypt,edu
 * Description: Top module that connects everything in the datapath and control units
 *
 * Change history: 10/29/2026 = Started
 * 11/1/2026 finished
+*
 *
 **********************************************************************/
 `include "defines.v"
@@ -28,6 +29,12 @@ wire data_request;
 wire memory_wait;
 wire pipeline_stall;
 
+
+wire mdStall, mdReady, mulDiv;
+wire [31:0] mdResult, EXResult;
+
+
+
 // Data memory request
 assign data_request = EX_MEM_Control[4] || EX_MEM_Control[3]; //memwrite and memread
 
@@ -35,7 +42,9 @@ assign data_request = EX_MEM_Control[4] || EX_MEM_Control[3]; //memwrite and mem
 assign memory_wait = data_request && !data_done;
 
 // Data memory has priority over instruction fetch
-assign pipeline_stall = stall || data_request;
+assign pipeline_stall = stall || data_request || mdStall;
+
+
 
 // Control Signals
 wire branch, jal, jalr, lui;
@@ -81,7 +90,7 @@ assign IF_ID_Input = flushIFID ? {32'b0, 32'h00000013} : {pcout, instruction_mem
 	Register #(.N(64)) IF_ID (.D(IF_ID_Input),.L((~halt && ~pipeline_stall) || flushIFID),.clk(clk),.rst(rst),.Q({IF_ID_PC,IF_ID_Inst} ));
 
 // Instruction to Control Unit
-ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_funct3]), .inst20(IF_ID_Inst[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp), .halt(halt));
+ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_funct3]), .inst20(IF_ID_Inst[20]), .branch(branch), .jal(jal), .jalr(jalr), .lui(lui), .memRead(memRead), .memWrite(memWrite), .regWrite(RegWrite), .ALUASel(ALUASel), .ALUBSel(ALUBSel), .WBSel(WBSel), .ALUOp(ALUOp),.inst25(IF_ID_Inst[25]), .mulDiv(mulDiv), .halt(halt));
 
 // Register File
 
@@ -91,33 +100,42 @@ ControlUnit control(.opcode(IF_ID_Inst[`IR_opcode]), .funct3(IF_ID_Inst[`IR_func
 rv32_ImmGen immGen(.IR(IF_ID_Inst), .Imm(generatedImm));
 
 // Hazard and flush control
-hazardUnit hazard_inst(.IFIDOpcode(IF_ID_Inst[6:0]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
+hazard_unit hazard_inst(.IFIDOpcode(IF_ID_Inst[`IR_opcode]),.IFIDRegisterRs1(IF_ID_Inst[19:15]),.IFIDRegisterRs2(IF_ID_Inst[24:20]), .IDEXRegisterRd(ID_EX_Rd), .IDEXMemRead(ID_EX_Control[9]), .stall(stall));
 
 flushUnit flush_inst (.PCSel(PCSel), .stall(stall), .flushIFID(flushIFID), .bubbleIDEX(bubbleIDEX));
 
 // ID/EX Stage (C1)
 wire [31:0] ID_EX_PC, ID_EX_RegR1, ID_EX_RegR2, ID_EX_Imm;
-wire [13:0] ID_EX_Control;
+wire [14:0] ID_EX_Control;
 wire [4:0] ID_EX_Rs1,ID_EX_Rs2,ID_EX_Rd;
 wire [3:0] ID_EX_Func3, IF_ID_Func3;
 wire [4:0] IF_ID__rd, IF_ID__rs1, IF_ID__rs2;
-wire [13:0] ID_EX_Control_input;
+wire [14:0] ID_EX_Control_input;
 assign IF_ID_Func3 = {IF_ID_Inst[30], IF_ID_Inst[14:12]};
 assign IF_ID__rd = IF_ID_Inst[11:7];
 assign IF_ID__rs1 = IF_ID_Inst[19:15];
 assign IF_ID__rs2 = IF_ID_Inst[24:20];
 // A memory request has completed, insert a bubble because the front of the pipeline was stalled while the memory request was being serviced
-assign ID_EX_Control_input = (bubbleIDEX || halt || (data_request && data_done)) ? 14'b0 : {branch,jal,jalr,lui,memRead,memWrite, RegWrite,ALUASel,ALUBSel,WBSel,ALUOp};
+assign ID_EX_Control_input = (bubbleIDEX || halt || (data_request && data_done)) ? 15'b0 : {mulDiv,branch,jal,jalr,lui,memRead,memWrite,RegWrite,ALUASel,ALUBSel,WBSel,ALUOp};
+
 //wb = regwrite, wbsel
 // m = branch, jal, jalr, lui, memwrite, memRead
 // ex = aluasel, alubsel, aluop
-	Register #(.N(161)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(!memory_wait),.clk(clk),.rst(rst),
+	Register #(.N(162)) ID_EX (.D({ID_EX_Control_input, IF_ID_PC, readdata1, readdata2, generatedImm, IF_ID_Func3,IF_ID__rs1, IF_ID__rs2,IF_ID__rd }),.L(!memory_wait && !mdStall),.clk(clk),.rst(rst),
 .Q({ID_EX_Control,ID_EX_PC,ID_EX_RegR1,ID_EX_RegR2,ID_EX_Imm, ID_EX_Func3, ID_EX_Rs1,ID_EX_Rs2, ID_EX_Rd} ));
 
 // forwarding unit
 forwardingUnit forwarding_inst(.IDEXRegisterRs1(ID_EX_Rs1), .IDEXRegisterRs2(ID_EX_Rs2), .EXMEMRegisterRd(EX_MEM_rd), .MEMWBRegisterRd(MEM_WB_rd), .EXMEMRegWrite(EX_MEM_Control[2] && !EX_MEM_Control[4]), .MEMWBRegWrite(MEM_WB_Control[2]), .forwardA(forwardA), .forwardB(forwardB));
 fourby1mux muxone (.in00(ID_EX_RegR1), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardA), .out(ALU_input_A));
 fourby1mux muxtwo (.in00(ID_EX_RegR2), .in01(MEM_WB_WriteData), .in10(EX_MEM_ALU_Out),.in11(32'd0), .sel(forwardB), .out(ALU_input_B));
+
+// RV32M (Bonus 2)
+assign mdStall = ID_EX_Control[14] && !mdReady;
+
+mulDivUnit mdu(.clk(clk), .rst(rst), .valid(ID_EX_Control[14]), .funct3(ID_EX_Func3[2:0]), .a(ALU_input_A), .b(ALU_input_B), .ready(mdReady), .result(mdResult));
+
+TwoBy1Mux EXResultMux(.A(ALUResult), .B(mdResult), .S(ID_EX_Control[14]), .C(EXResult));
+
 
 // execute: 
 assign targetAddress = ID_EX_PC + ID_EX_Imm;
@@ -137,9 +155,10 @@ wire [4:0] EX_MEM_Control; // wb and mem only
 wire [4:0] EX_MEM_rd; 
 wire [4:0] EX_MEM_Control_input;
 wire [2:0] EX_MEM_Func3;
-	assign EX_MEM_Control_input = {ID_EX_Control[9:7], ID_EX_Control[4:3]}; //memread,memwrite,regwrite,wbsel
+assign EX_MEM_Control_input = mdStall ? 5'b0 : {ID_EX_Control[9:7], ID_EX_Control[4:3]};
+
 // // EX/MEM holds its request until the memory completes it.
-Register #(.N(109)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,ALUResult,ALU_input_B,ID_EX_Rd, ID_EX_Func3[2:0]}), .L(!memory_wait),.clk(clk),.rst(rst),
+Register #(.N(109)) EX_MEM (.D({EX_MEM_Control_input,ID_EX_PC + 32'd4,EXResult,ALU_input_B,ID_EX_Rd, ID_EX_Func3[2:0]}), .L(!memory_wait),.clk(clk),.rst(rst),
                               .Q({EX_MEM_Control,EX_MEM_PCPlus4,EX_MEM_ALU_Out,EX_MEM_RegR2,EX_MEM_rd, EX_MEM_Func3}));
 
 // Memory access: 
@@ -176,3 +195,6 @@ BranchUnit branchU(.branch(ID_EX_Control[13]),.jal(ID_EX_Control[12]), .jalr(ID_
 
 
 endmodule
+
+
+
