@@ -8,7 +8,7 @@
 * Description: Register implementation for register file and pc
 *
 * Change history: 10/29/2026 = Edited for clarity and bit lengths
-*
+* 11/19/2026 ready for submission
 **********************************************************************/
 module Register #(parameter N = 32) (
     input [N-1:0] D,
