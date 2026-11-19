@@ -7,12 +7,13 @@
 * Description: control unit for all instructions
 *
 * Change history: 10/28/2026 = Started
-* 11/1/2026 finished
+* 11/1/2026 finished for ms2
+* 11/18/2026 added mulDiv for bonus
 *
 **********************************************************************/
 `include "defines.v"
 
-module ControlUnit (input [6:0] opcode, input [2:0] funct3, input inst20, output reg branch, output reg jal, output reg jalr, output reg lui, output reg memRead, output reg memWrite, output reg regWrite, output reg ALUASel, output reg ALUBSel, output reg [1:0] WBSel, output reg  [2:0] ALUOp, output reg halt);
+module ControlUnit (input [4:0] opcode, input [2:0] funct3, input inst20, input inst25, output reg branch, output reg jal, output reg jalr, output reg lui, output reg memRead, output reg memWrite, output reg regWrite, output reg ALUASel, output reg ALUBSel, output reg [1:0] WBSel, output reg  [2:0] ALUOp, output reg halt, output reg mulDiv);
 
 always @(*) begin
 //defaults
@@ -28,11 +29,13 @@ ALUBSel = `ALU_B_RS2;
 WBSel = `WB_ALU;
 ALUOp = `ALUOP_ADD;
 halt = 1'b0;
+mulDiv = 1'b0;
 
 case (opcode)
 `OPCODE_Arith_R: begin
 regWrite = 1'b1;
 ALUOp = `ALUOP_R;
+mulDiv = (inst25 == 1'b1);
 end
 
 `OPCODE_Arith_I: begin
@@ -96,3 +99,6 @@ endcase
 end
 
 endmodule
+
+
+
