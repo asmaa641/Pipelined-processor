@@ -24,7 +24,7 @@ module RegFile #(parameter N = 32) (
     generate
         for (j = 0; j < N; j = j + 1) begin
 
-            RegNeg register (
+            Register register (
                 .D(writedata),
                 .L(load[j]),
                 .clk(clk),

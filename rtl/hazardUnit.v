@@ -15,7 +15,7 @@
 
 `include "defines.v"
 
-module HazardUnit(input [4:0] IFIDOpcode, input [4:0] IFIDRegisterRs1, input [4:0] IFIDRegisterRs2, input [4:0] IDEXRegisterRd, input IDEXMemRead, output stall);
+module hazardUnit(input [4:0] IFIDOpcode, input [4:0] IFIDRegisterRs1, input [4:0] IFIDRegisterRs2, input [4:0] IDEXRegisterRd, input IDEXMemRead, output stall);
 
 //for which source registers the decode instruction needs
 reg usesRs1;

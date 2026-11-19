@@ -25,14 +25,14 @@ genvar j;
 generate
     for (j = 0; j < N; j = j + 1) begin: genmodule
 
-        twoby1mux  m1(
+         TwoBy1Mux  m1(
             .A(Q[j]),
             .B(D[j]),
-            .L(L),
+            .S(L),
             .C(muxoutput[j])
         );
 
-        DFFneg D1(
+        DFlipFlop D1(
             .clk(clk),
             .rst(rst),
             .D(muxoutput[j]),
