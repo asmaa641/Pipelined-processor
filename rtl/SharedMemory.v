@@ -1,4 +1,17 @@
-
+/*******************************************************************
+*
+* Module: SharedMemory
+* Project: RISC-V Pipelined Processor
+* Author: Asmaa Elshabshiri
+* Email: asmaaelshabshiri@aucegypt.edu
+*
+* Description:
+* Shared memory module used for instruction and data memory access.
+*
+* Change history:
+* 11/19/2026 = ready for submission
+*
+*******************************************************************/
 module SharedMemory(input clk, input phase, input[31:0] inst_addr, input MemRead, input MemWrite, input [2:0] funct3,
 					input [31:0] data_addr, input [31:0] data_in, output reg [31:0] data_out, output reg [31:0] inst_out);
 
