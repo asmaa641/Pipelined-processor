@@ -1,14 +1,14 @@
 /*******************************************************************
 *
-* Module: Processor
+* Module: Processor Bonus
 * Project: RISCV Processor
 * Author: Asmaa Elshabshiri, Janna Alfiky
 * Emails: asmaaelshabshiri@aucegypt.edu, jannabassem@aucegypt,edu
-* Description: Top module that connects everything in the datapath and control units
+* Description: Top module that connects everything in the datapath and control units with bonus 2 and bonus 5
 *
 * Change history: 10/29/2026 = Started
-* 11/1/2026 finished
-*
+* 11/1/2026 single cycle done
+* 11/19/2026 pipelined bonus done
 *
 **********************************************************************/
 `include "defines.v"
