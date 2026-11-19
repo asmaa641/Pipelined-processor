@@ -10,7 +10,7 @@
 * Supports reading from two registers and writing to a destination register.
 *
 * Change history:
-* 11/19/2026 = Created
+* 11/19/2026 = ready for submission
 *
 *******************************************************************/
 module RegFile #(parameter N = 32) (
