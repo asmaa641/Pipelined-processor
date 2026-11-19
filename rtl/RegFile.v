@@ -1,4 +1,18 @@
-
+/*******************************************************************
+*
+* Module: RegFile
+* Project: RISC-V Pipelined Processor
+* Author: Asmaa Elshabshiri
+* Email: asmaaelshabshiri@aucegypt.edu
+*
+* Description:
+* Register file containing the 32 general-purpose RISC-V registers.
+* Supports reading from two registers and writing to a destination register.
+*
+* Change history:
+* 11/19/2026 = Created
+*
+*******************************************************************/
 module RegFile #(parameter N = 32) (
 
     input clk, rst,
